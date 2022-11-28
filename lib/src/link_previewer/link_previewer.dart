@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:neplox_linkpreviewer/fetch_elements/fetch_link.dart';
+import 'package:neplox_linkpreviewer/src/fetch_elements/fetch_link.dart';
 
 class LinkPreviewer extends StatelessWidget {
   const LinkPreviewer({super.key,this.url});

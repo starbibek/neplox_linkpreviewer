@@ -1,6 +1,10 @@
 import 'package:html/parser.dart';
 import 'package:http/http.dart';
 
+import '../model/element_model.dart';
+
+
+
    Future fetchElements(url) async {
     try {
       final client = Client();
@@ -54,23 +58,9 @@ import 'package:http/http.dart';
         }
       }
 
-      return {
-        'title': title??"",
-        'description': description??"",
-        'image': image??"",
-        'appleIcon': appleIcon??"",
-        'favIcon': favIcon??"",
-        'link': link,
-      };
+      return ElementModel(title: title,description: description,image: image,appleIcon: appleIcon,favIcon: favIcon,link: link);
     } catch (e) {
-      return {
-        'title': "",
-        'description': "",
-        "image": '',
-        'appleIcon': '',
-        'favIcon': '',
-        'link': ''
-      };
+      return ElementModel();
     }
   }
 
@@ -82,3 +72,4 @@ import 'package:http/http.dart';
       return 'http://$url';
     }
   }
+
