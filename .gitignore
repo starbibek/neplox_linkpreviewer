@@ -1,6 +1,8 @@
 # Miscellaneous
 *.class
 *.log
+*.flutter-plugins-dependencies
+*.flutter-plugins
 *.pyc
 *.swp
 .DS_Store
