@@ -13,9 +13,13 @@ class LinkPreviewer extends StatelessWidget {
       child: FutureBuilder<ElementModel>(
         future: fetch(url!),
         builder: ((context, snapshot) {
-        if(!snapshot.hasData){
+        print("This is Neplox Null Element Print ${snapshot.data}");
+        if(snapshot.connectionState==ConnectionState.waiting){
           return const CircularProgressIndicator();
-        }else{
+        }else if(!snapshot.hasData){
+          return const Center(child: Text("Sorry Data Not Available"));
+        }
+        else{
           return Container(
             constraints: BoxConstraints(
               maxHeight: 0.05 * size.height,
