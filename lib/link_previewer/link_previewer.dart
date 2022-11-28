@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:neplox_linkpreviewer/fetch_elements/fetch_link.dart';
 
@@ -20,7 +21,15 @@ class LinkPreviewer extends StatelessWidget {
               maxWidth: 0.5 * size.width,
             ),
             decoration: const BoxDecoration(),
-            child: Column(children: const [],),
+            child: Column(children:  [
+              Container(
+                constraints: BoxConstraints(
+                  maxWidth: 0.5*size.width,
+                  maxHeight: 0.05 *size.height,
+                ),
+                child:CachedNetworkImage(imageUrl: snapshot.data[0]['image'],) ,
+              ),
+            ],),
           );
         }
       })),
