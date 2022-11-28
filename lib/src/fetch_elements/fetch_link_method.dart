@@ -58,7 +58,7 @@ import '../model/element_model.dart';
         }
       }
 
-      return ElementModel(title: title,description: description,image: image,appleIcon: appleIcon,favIcon: favIcon,link: link);
+      return ElementModel(title: title, description: description, image: image, appleIcon: appleIcon,favIcon: favIcon,link: link);
     } catch (e) {
       return ElementModel();
     }

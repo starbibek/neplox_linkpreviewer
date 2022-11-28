@@ -22,15 +22,15 @@ class LinkPreviewer extends StatelessWidget {
         else{
           return Container(
             constraints: BoxConstraints(
-              maxHeight: 0.05 * size.height,
-              maxWidth: 0.5 * size.width,
+              maxHeight: 0.2 * size.height,
+              maxWidth: 1 * size.width,
             ),
             decoration: const BoxDecoration(),
             child: Column(children:  [
               Container(
                 constraints: BoxConstraints(
-                  maxWidth: 0.5*size.width,
-                  maxHeight: 0.05 *size.height,
+                  maxWidth: 1*size.width,
+                  maxHeight: 0.2 *size.height,
                 ),
                 child:CachedNetworkImage(imageUrl: snapshot.data!.image!,) ,
               ),
