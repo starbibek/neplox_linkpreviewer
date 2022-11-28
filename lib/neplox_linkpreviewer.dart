@@ -1,7 +1,7 @@
 library neplox_linkpreviewer;
-
-/// A Calculator.
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
+import 'package:neplox_linkpreviewer/link_previewer/link_previewer_index.dart';
+/// Neplox Link Fetcher.
+class NeploxLinkPreviewer {
+  show(String url)=>LinkPreviewer(url: url);
 }
+
