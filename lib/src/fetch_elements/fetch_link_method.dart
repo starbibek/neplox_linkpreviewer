@@ -5,7 +5,7 @@ import '../model/element_model.dart';
 
 
 
-   Future fetchElements(url) async {
+    fetchElements(url) async {
     try {
       final client = Client();
       var parsedUrl = Uri.parse(_validateUrl(url));
