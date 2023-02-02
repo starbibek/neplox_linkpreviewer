@@ -1,1 +1,1 @@
-export 'fetch_link.dart';
+export 'fetch_link_method.dart';
