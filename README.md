@@ -1,6 +1,7 @@
 # Neplox LinkPreviewer
-##### URL Preview and Meta Data:
-##
+
+##### URL Preview and Meta Data
+
 [![Build Status](https://app.travis-ci.com/starbibek/neplox_linkpreviewer.svg?branch=master)](https://app.travis-ci.com/starbibek/neplox_linkpreviewer.svg?branch=master)
 ![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)
 
@@ -9,26 +10,34 @@ A flutter package which will help you to show preview of the web url's with beau
 # Neplox LinkPreviewer: Preview Directions
 
 ## RTL
+
 ![](assets/rtl.jpg)
 
 ## LTR
+
 ![](assets/ltr.jpg)
 
 ## TOP
+
 ![](assets/top.jpg)
 
 ## BOTTOM
+
 ![](assets/bottom.jpg)
 **If you like Show some ❤️ and star the repo to support the project**
+
 ## Installation
 
 ```Dart
 flutter pub add neplox_linkpreviewer
 ```
+
 # Usage
+
 ```Dart
 import 'package:neplox_linkpreviewer/neplox_linkpreviewer.dart';
 ````
+
 ```Dart
 class LinkPreviwer extends StatefulWidget {
   const LinkPreviwer({super.key, required this.url});
@@ -58,6 +67,7 @@ class _LinkPreviwerState extends State<LinkPreviwer> {
 ```
 
 ## MIT License
+
 ```
 Copyright (c) 2023 Shobhit paudel
 
@@ -79,6 +89,3 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
-
-
-

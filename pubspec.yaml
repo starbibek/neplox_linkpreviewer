@@ -1,5 +1,5 @@
 name: neplox_linkpreviewer
-description: LinkPreviewer Package to show Normal URL link elements.
+description: LinkPreviewer Package to show Normal URL link elements and it also provide Element object that contain meta tags data fetched using http request which can be used to implement in own custom design.
 version: 1.0.0
 author: Shobhit Paudel<shobhitpaudel@gmail.com>
 homepage: https://github.com/starbibek/neplox_linkpreviewer

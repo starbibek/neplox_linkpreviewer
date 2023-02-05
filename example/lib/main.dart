@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:linkpreview_tester/link_previewer.dart';
+import 'package:neplox_linkpreviewer/neplox_linkpreviewer.dart';
 
 void main() {
   runApp(const MyApp());
@@ -51,5 +51,29 @@ class _MyHomePageState extends State<MyHomePage> {
                 url: urls[index],
               );
             }));
+  }
+}
+
+class LinkPreviwer extends StatefulWidget {
+  const LinkPreviwer({super.key, required this.url});
+  final String url;
+
+  @override
+  State<LinkPreviwer> createState() => _LinkPreviwerState();
+}
+
+class _LinkPreviwerState extends State<LinkPreviwer> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: NeploxLinkPreviewer(
+        url: widget.url,
+        linkPreviewOptions: NLinkPreviewOptions(
+            urlLaunch: NURLLaunch.enable,
+            urlLaunchIn: NURLLaunchIn.browser,
+            thumbnailPreviewDirection: NThumbnailPreviewDirection.bottom),
+      ),
+    );
   }
 }

@@ -44,7 +44,6 @@ enum NDecoration { none, box, shadow, boxShadow }
 class NLinkPreviewOptions {
   NURLLaunch urlLaunch;
   NURLLaunchIn urlLaunchIn;
-  NURLContentType urlContentType;
   NThumbnailPreviewDirection thumbnailPreviewDirection;
   NLinkPreviewOptions({
     /// This is the constructor for the [NLinkPreviewOptions] class.
@@ -55,9 +54,6 @@ class NLinkPreviewOptions {
 
     /// [urlLaunchIn] - Launch the URL in the browser or app. Default is [NURLLaunchIn.browser].
     this.urlLaunchIn = NURLLaunchIn.browser,
-
-    /// [urlContentType] - The type of the URL. Default is [NURLContentType.url].
-    this.urlContentType = NURLContentType.url,
 
     /// [thumbnailPreviewDirection] - The direction of the thumbnail preview. Default is [NThumbnailPreviewDirection.ltr].
     this.thumbnailPreviewDirection = NThumbnailPreviewDirection.ltr,
@@ -84,30 +80,3 @@ extension StringExtension on String {
   }
 }
 // END StringExtension.
-
-class NDecorationBox {
-  final Color? color;
-
-  final DecorationImage? image;
-
-  final BoxBorder? border;
-
-  final BorderRadiusGeometry? borderRadius;
-
-  final List<BoxShadow>? boxShadow;
-  final List<Gradient>? backgroundGradient;
-
-  final BlendMode? backgroundBlendMode;
-  final Gradient? gradient;
-
-  const NDecorationBox({
-    this.color = Colors.white,
-    this.image,
-    this.border,
-    this.borderRadius = BorderRadius.zero,
-    this.boxShadow,
-    this.backgroundGradient,
-    this.backgroundBlendMode,
-    this.gradient,
-  });
-}

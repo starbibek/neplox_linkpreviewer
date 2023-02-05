@@ -10,6 +10,8 @@ import '../model/element_model.dart';
 class NMetaFetcher {
   NMetaFetcher._();
   static final NMetaFetcher instance = NMetaFetcher._();
+
+  ///Fetch Elements from the url.
   get fetchNow => (String url) => _nfetch(url);
 
   /// Fetch Elements from the url.
@@ -29,16 +31,29 @@ class NMetaFetcher {
 
   Future<ElementModel> _fetchElements(url) async {
     try {
-      final client = Client();
+      final client = Client(); //http client
       var parsedUrl = Uri.parse(_validateUrl(url));
+
+      /// validate url
       final response = await client.get(parsedUrl);
+
+      /// get response
       final document = parse(response.body);
+
+      /// parse response body
 
       String? description, title, image, appleIcon, favIcon, link;
 
+      /// declare variables
+
       var elements = document.getElementsByTagName('meta');
+
+      /// get meta tags
       final linkElements = document.getElementsByTagName('link');
 
+      /// get link tags
+
+      /// fetch data from meta tags
       for (var tmp in elements) {
         if (tmp.attributes['property'] == 'og:title') {
           //fetch seo title
@@ -80,6 +95,7 @@ class NMetaFetcher {
         }
       }
 
+      /// return ElementModel object
       return ElementModel(
           title: title,
           description: description,
@@ -93,6 +109,7 @@ class NMetaFetcher {
     }
   }
 
+  /// validate url
   _validateUrl(String url) {
     if (url.startsWith('http://') == true ||
         url.startsWith('https://') == true) {
