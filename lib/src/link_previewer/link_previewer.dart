@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:neplox_linkpreviewer/src/cache/cache_manager.dart';
 import 'package:neplox_linkpreviewer/src/fetch_elements/fetch_link.dart';
+import 'package:neplox_linkpreviewer/src/fetch_elements/fetch_link_index.dart';
 import 'package:neplox_linkpreviewer/src/helper/helpers.dart';
 import 'package:neplox_linkpreviewer/src/model/element_model.dart';
 import 'link_preview_styles/style_index.dart';
@@ -23,6 +24,7 @@ class NeploxLinkPreviewer extends StatefulWidget {
 }
 
 class _NeploxLinkPreviewerState extends State<NeploxLinkPreviewer> {
+  final NMetaFetcher nfetch = NMetaFetcher.instance;
   late final lotsOfData = Future.wait(
     [
       getData(),
@@ -34,9 +36,8 @@ class _NeploxLinkPreviewerState extends State<NeploxLinkPreviewer> {
 
     super.initState();
   }
-
   Future<ElementModel> getData() async {
-    return await nfetch(widget.url);
+    return await nfetch.fetchNow(widget.url);
   }
 
   @override
