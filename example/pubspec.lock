@@ -194,10 +194,10 @@ packages:
   neplox_linkpreviewer:
     dependency: "direct main"
     description:
-      path: "C:/FlutterProjects/packages/neplox_linkpreviewer"
-      relative: false
+      path: ".."
+      relative: true
     source: path
-    version: "1.0.0"
+    version: "1.0.1"
   octo_image:
     dependency: transitive
     description:
