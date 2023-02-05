@@ -5,9 +5,31 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 class NonePreviewStyle extends StatelessWidget {
   const NonePreviewStyle(
-      {super.key, required this.snapshot, required this.linkPreviewOptions});
+      {super.key,
+      required this.snapshot,
+      required this.linkPreviewOptions,
+      this.titleFontSize,
+      this.subtitleFontSize,
+      this.titleColor,
+      this.subtitleColor});
+
+  /// [snapshot] is the data of the link you want to preview
   final ElementModel snapshot;
+
+  /// [linkPreviewOptions] is the options you want to set for the link preview
   final NLinkPreviewOptions linkPreviewOptions;
+
+  /// [titleFontSize] is the font size of the title of the link preview
+  final double? titleFontSize;
+
+  /// [subtitleFontSize] is the font size of the subtitle of the link preview
+  final double? subtitleFontSize;
+
+  /// [titleColor] is the color of the title of the link preview
+  final Color? titleColor;
+
+  /// [subtitleColor] is the color of the subtitle of the link preview
+  final Color? subtitleColor;
   @override
   Widget build(BuildContext context) {
     return Material(

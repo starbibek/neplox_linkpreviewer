@@ -5,9 +5,32 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 class RTLPreviewStyle extends StatelessWidget {
   const RTLPreviewStyle(
-      {super.key, required this.snapshot, required this.linkPreviewOptions});
+      {super.key,
+      required this.snapshot,
+      required this.linkPreviewOptions,
+      this.subtitleColor,
+      this.subtitleFontSize,
+      this.titleColor,
+      this.titleFontSize});
+
+  /// [snapshot] is the data of the link you want to preview
   final ElementModel snapshot;
+
+  /// [linkPreviewOptions] is the options you want to set for the link preview
   final NLinkPreviewOptions linkPreviewOptions;
+
+  /// [titleFontSize] is the font size of the title of the link preview
+  final double? titleFontSize;
+
+  /// [subtitleFontSize] is the font size of the subtitle of the link preview
+  final double? subtitleFontSize;
+
+  /// [titleColor] is the color of the title of the link preview
+  final Color? titleColor;
+
+  /// [subtitleColor] is the color of the subtitle of the link preview
+  final Color? subtitleColor;
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -18,48 +41,60 @@ class RTLPreviewStyle extends StatelessWidget {
         // if urlLaunch is enabled then only it will be clickable
         onTap: linkPreviewOptions.urlLaunch == NURLLaunch.enable
             ? () {
-                launchUrlString(
-                  "${snapshot.link}",
-                );
+                launchUrlString(snapshot.link ?? "",
+                    mode: linkPreviewOptions.urlLaunchIn == NURLLaunchIn.app
+                        ? LaunchMode.inAppWebView
+                        : LaunchMode.externalApplication);
               }
             : null,
-        child: Container(
-          clipBehavior: Clip.antiAlias,
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            borderRadius: BorderRadius.circular(10),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minWidth: 0.5.sw(context),
+            minHeight: 0.05.sh(context),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: 0.6.sw(context),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: headerTextWidget(
-                          context, "${snapshot.title}".capitalize()),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: bodyTextWidget(context, "${snapshot.description}"),
-                    ),
-                  ],
+          child: FittedBox(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: 0.6.sw(context),
+                    minWidth: 0.3.sw(context),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(0.004.sres(context)),
+                        child: headerTextWidget(
+                            context, "${snapshot.title}".capitalize(),
+                            fontSize: titleFontSize),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(0.004.sres(context)),
+                        child: bodyTextWidget(
+                            context, "${snapshot.description}",
+                            fontSize: subtitleFontSize),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(
-                width: 0.3.sw(context),
-                height: 0.35.sw(context),
-                child: Image.network(
-                  snapshot.image ?? "",
-                  fit: BoxFit.cover,
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: 0.3.sw(context),
+                    maxHeight: 0.35.sw(context),
+                    minWidth: 0.2.sw(context),
+                    minHeight: 0.28.sw(context),
+                  ),
+                  child: Image.network(
+                    snapshot.image ?? "",
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
