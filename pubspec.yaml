@@ -1,7 +1,6 @@
 name: neplox_linkpreviewer
 description: LinkPreviewer Package to show Normal URL link elements and it also provide Element object that contain meta tags data fetched using http request which can be used to implement in own custom design.
 version: 1.0.0
-author: Shobhit Paudel<shobhitpaudel@gmail.com>
 homepage: https://github.com/starbibek/neplox_linkpreviewer
 
 environment:
@@ -15,7 +14,7 @@ dependencies:
   html: ^0.15.1
   http: ^0.13.5
   shared_preferences: ^2.0.17
-  url_launcher: 
+  url_launcher: ^6.1.8
 
 dev_dependencies:
   flutter_lints: ^2.0.0
