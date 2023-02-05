@@ -67,6 +67,8 @@ class _LinkPreviwerState extends State<LinkPreviwer> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10.0),
+
+      /// NeploxLinkPreviewer is the main widget that will show the preview of the link
       child: NeploxLinkPreviewer(
         url: widget.url,
         linkPreviewOptions: NLinkPreviewOptions(
@@ -74,6 +76,32 @@ class _LinkPreviwerState extends State<LinkPreviwer> {
             urlLaunchIn: NURLLaunchIn.browser,
             thumbnailPreviewDirection: NThumbnailPreviewDirection.bottom),
       ),
+    );
+  }
+}
+
+class ExampleMetaFetcher extends StatefulWidget {
+  const ExampleMetaFetcher({super.key});
+
+  @override
+  State<ExampleMetaFetcher> createState() => _ExampleMetaFetcherState();
+}
+
+class _ExampleMetaFetcherState extends State<ExampleMetaFetcher> {
+  final NeploxMetaDataFetcher _metaDataFetcher = NeploxMetaDataFetcher.instance;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<ElementModel>(
+      future: _metaDataFetcher.fetchData(
+          "https://ekantipur.com/news/2023/02/05/167556100681196555.html"),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Text(snapshot.data?.title.toString() ?? "No Title");
+        } else {
+          return const Text("No data");
+        }
+      },
     );
   }
 }

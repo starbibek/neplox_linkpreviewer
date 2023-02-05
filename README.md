@@ -66,6 +66,33 @@ class _LinkPreviwerState extends State<LinkPreviwer> {
 
 ```
 
+``` Dart
+class ExampleMetaFetcher extends StatefulWidget {
+  const ExampleMetaFetcher({super.key});
+
+  @override
+  State<ExampleMetaFetcher> createState() => _ExampleMetaFetcherState();
+}
+
+class _ExampleMetaFetcherState extends State<ExampleMetaFetcher> {
+  final NeploxMetaDataFetcher _metaDataFetcher = NeploxMetaDataFetcher.instance;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<ElementModel>(
+      future: _metaDataFetcher.fetchData(
+          "https://ekantipur.com/news/2023/02/05/167556100681196555.html"),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Text(snapshot.data?.title.toString() ?? "No Title");
+        } else {
+          return const Text("No data");
+        }
+      },
+    );
+
+```
+
 ## MIT License
 
 ```
