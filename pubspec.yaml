@@ -1,7 +1,8 @@
 name: neplox_linkpreviewer
 description: LinkPreviewer Package to show Normal URL link elements.
-version: 0.0.1
-homepage: "neplox_linkpreviewer"
+version: 1.0.0
+author: Shobhit Paudel<shobhitpaudel@gmail.com>
+homepage: https://github.com/starbibek/neplox_linkpreviewer
 
 environment:
   sdk: '>=2.18.4 <3.0.0'
