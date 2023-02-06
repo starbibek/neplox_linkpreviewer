@@ -19,11 +19,11 @@ A flutter package that helps you preview web URLs with Pre-Made UI and with cust
 
 ## TOP
 
-<img src="https://github.com/starbibek/neplox_linkpreviewer/blob/master/assets/top.jpg" data-canonical-src="https://github.com/starbibek/neplox_linkpreviewer/blob/master/assets/top.jpg" width="250" height="150" />
+<img src="https://github.com/starbibek/neplox_linkpreviewer/blob/master/assets/top.jpg" data-canonical-src="https://github.com/starbibek/neplox_linkpreviewer/blob/master/assets/top.jpg" width="250" height="300" />
 
 ## BOTTOM
 
-<img src="https://github.com/starbibek/neplox_linkpreviewer/blob/master/assets/bottom.jpg" data-canonical-src="https://github.com/starbibek/neplox_linkpreviewer/blob/master/assets/bottom.jpg" width="250" height="150" />
+<img src="https://github.com/starbibek/neplox_linkpreviewer/blob/master/assets/bottom.jpg" data-canonical-src="https://github.com/starbibek/neplox_linkpreviewer/blob/master/assets/bottom.jpg" width="250" height="300" />
 
 **Show some ❤️ and star the repo to support the project if it's helpful to you.**
 
