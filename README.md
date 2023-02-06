@@ -5,26 +5,32 @@
 [![Build Status](https://app.travis-ci.com/starbibek/neplox_linkpreviewer.svg?branch=master)](https://app.travis-ci.com/starbibek/neplox_linkpreviewer.svg?branch=master)
 ![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)
 
-A flutter package which will help you to show preview of the web url's with beautiful customizable design.
+A flutter package that helps you preview web URLs with Pre-Made UI and with customizable options.You can also fetch meta data from url as Element object.
 
 # Neplox LinkPreviewer: Preview Directions
 
 ## RTL
 
-![](assets/rtl.jpg)
+<img src="https://github.com/starbibek/neplox_linkpreviewer/blob/master/assets/rtl.jpg" data-canonical-src="https://github.com/starbibek/neplox_linkpreviewer/blob/master/assets/rtl.jpg" width="250" height="150" />
 
 ## LTR
 
-![](assets/ltr.jpg)
+<img src="https://github.com/starbibek/neplox_linkpreviewer/blob/master/assets/ltr.jpg" data-canonical-src="https://github.com/starbibek/neplox_linkpreviewer/blob/master/assets/ltr.jpg" width="250" height="150" />
 
 ## TOP
 
-![](assets/top.jpg)
+<img src="https://github.com/starbibek/neplox_linkpreviewer/blob/master/assets/top.jpg" data-canonical-src="https://github.com/starbibek/neplox_linkpreviewer/blob/master/assets/top.jpg" width="250" height="150" />
 
 ## BOTTOM
 
-![](assets/bottom.jpg)
-**If you like Show some ❤️ and star the repo to support the project**
+<img src="https://github.com/starbibek/neplox_linkpreviewer/blob/master/assets/bottom.jpg" data-canonical-src="https://github.com/starbibek/neplox_linkpreviewer/blob/master/assets/bottom.jpg" width="250" height="150" />
+
+**Show some ❤️ and star the repo to support the project if it's helpful to you.**
+
+## Features
+ * Fetch Meta Data as ElementModel Object from url
+ * Have varities of Link Preview direction style(TOP, BOTTOM, LTR, RTL)
+ * Can customize the preview style 
 
 ## Installation
 
