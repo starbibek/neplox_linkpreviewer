@@ -1,59 +1,30 @@
-# Neplox LinkPreviewer
+# neplox_linkpreviewer
 
-##### URL Preview and Meta Data
-
-[![Build Status](https://app.travis-ci.com/starbibek/neplox_linkpreviewer.svg?branch=master)](https://app.travis-ci.com/starbibek/neplox_linkpreviewer.svg?branch=master)
-![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)
-
-A flutter package that helps you preview web URLs with Pre-Made UI and with customizable options.You can also fetch meta data from url as Element object.
-
-# Neplox LinkPreviewer: Preview Directions
-
-## RTL
-
-<img src="https://github.com/starbibek/neplox_linkpreviewer/blob/master/assets/rtl.jpg" data-canonical-src="https://github.com/starbibek/neplox_linkpreviewer/blob/master/assets/rtl.jpg" width="250" height="150" />
-
-## LTR
-
-<img src="https://github.com/starbibek/neplox_linkpreviewer/blob/master/assets/ltr.jpg" data-canonical-src="https://github.com/starbibek/neplox_linkpreviewer/blob/master/assets/ltr.jpg" width="250" height="150" />
-
-## TOP
-
-<img src="https://github.com/starbibek/neplox_linkpreviewer/blob/master/assets/top.jpg" data-canonical-src="https://github.com/starbibek/neplox_linkpreviewer/blob/master/assets/top.jpg" width="250" height="300" />
-
-## BOTTOM
-
-<img src="https://github.com/starbibek/neplox_linkpreviewer/blob/master/assets/bottom.jpg" data-canonical-src="https://github.com/starbibek/neplox_linkpreviewer/blob/master/assets/bottom.jpg" width="250" height="300" />
-
-**Show some ❤️ and star the repo to support the project if it's helpful to you.**
-
-## Features
- * Fetch Meta Data as ElementModel Object from url
- * Have varities of Link Preview direction style(TOP, BOTTOM, LTR, RTL)
- * Can customize the preview style 
+The `neplox_linkpreviewer` package is a Flutter package that allows you to fetch metadata from a URL link and provides a link preview. It also allows users to customize the link preview and fetched metadata to implement them in their own Widgets.
 
 ## Installation
 
-```Dart
-flutter pub add neplox_linkpreviewer
+Add `neplox_linkpreviewer` as a dependency in your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  neplox_linkpreviewer: ^1.0.0
 ```
 
-# Usage
+## Usage
 
-```Dart
-import 'package:neplox_linkpreviewer/neplox_linkpreviewer.dart';
-````
+To fetch a link preview from a URL, you can use the `NeploxLinkPreviewer` widget:
 
-```Dart
-class LinkPreviwer extends StatefulWidget {
-  const LinkPreviwer({super.key, required this.url});
+```dart
+class LinkPreviewer extends StatefulWidget {
+  const LinkPreviewer({Key? key, required this.url});
   final String url;
 
   @override
-  State<LinkPreviwer> createState() => _LinkPreviwerState();
+  _LinkPreviewerState createState() => _LinkPreviewerState();
 }
 
-class _LinkPreviwerState extends State<LinkPreviwer> {
+class _LinkPreviewerState extends State<LinkPreviewer> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -61,23 +32,27 @@ class _LinkPreviwerState extends State<LinkPreviwer> {
       child: NeploxLinkPreviewer(
         url: widget.url,
         linkPreviewOptions: NLinkPreviewOptions(
-            urlContentType: NURLContentType.video,
-            urlLaunch: NURLLaunch.enable,
-            urlLaunchIn: NURLLaunchIn.browser,
-            thumbnailPreviewDirection: NThumbnailPreviewDirection.bottom),
+          urlContentType: NURLContentType.video,
+          urlLaunch: NURLLaunch.enable,
+          urlLaunchIn: NURLLaunchIn.browser,
+          thumbnailPreviewDirection: NThumbnailPreviewDirection.bottom,
+        ),
       ),
     );
   }
 }
-
 ```
 
-``` Dart
+In the above example, the `NeploxLinkPreviewer` widget is used to fetch and display the link preview for the specified `url`. You can customize the link preview options by providing a `NLinkPreviewOptions` object.
+
+To fetch metadata for your own Widget, you can use the `NeploxMetaDataFetcher`:
+
+```dart
 class ExampleMetaFetcher extends StatefulWidget {
-  const ExampleMetaFetcher({super.key});
+  const ExampleMetaFetcher({Key? key});
 
   @override
-  State<ExampleMetaFetcher> createState() => _ExampleMetaFetcherState();
+  _ExampleMetaFetcherState createState() => _ExampleMetaFetcherState();
 }
 
 class _ExampleMetaFetcherState extends State<ExampleMetaFetcher> {
@@ -96,29 +71,16 @@ class _ExampleMetaFetcherState extends State<ExampleMetaFetcher> {
         }
       },
     );
-
+  }
+}
 ```
 
-## MIT License
+In the above example, the `NeploxMetaDataFetcher` is used to fetch metadata for the specified URL. The fetched data can be used to implement your own Widget. The `fetchData` method returns a `Future` that resolves to an `ElementModel` object containing the fetched metadata.
 
-```
-Copyright (c) 2023 Shobhit paudel
+## Documentation
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the 'Software'), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+For more details and advanced usage, please refer to the [API documentation](https://pub.dev/documentation/neplox_linkpreviewer/latest/).
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+## License
 
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
+This package is released under the [MIT License](https://opensource.org/licenses/MIT).
