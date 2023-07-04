@@ -1,6 +1,6 @@
 name: neplox_linkpreviewer
 description: LinkPreviewer Package to show Normal URL link elements and it also provide Element object for custom UI implementation.
-version: 1.0.3
+version: 1.0.4
 homepage: https://github.com/starbibek/neplox_linkpreviewer
 
 environment:
@@ -11,10 +11,10 @@ dependencies:
   cached_network_image: ^3.2.3
   flutter:
     sdk: flutter
-  html: ^0.15.1
-  http: ^0.13.5
-  shared_preferences: ^2.0.17
-  url_launcher: ^6.1.8
+  html: ^0.15.4
+  http: ^1.1.0
+  shared_preferences: ^2.2.0
+  url_launcher: ^6.1.11
 
 dev_dependencies:
   flutter_lints: ^2.0.0

@@ -8,7 +8,7 @@ Add `neplox_linkpreviewer` as a dependency in your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  neplox_linkpreviewer: 1.0.3
+  neplox_linkpreviewer: 1.0.4
 ```
 
 ## Usage

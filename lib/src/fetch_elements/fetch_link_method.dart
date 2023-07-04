@@ -32,6 +32,7 @@ class NMetaFetcher {
   Future<ElementModel> _fetchElements(url) async {
     try {
       final client = Client(); //http client
+      ///parsing url
       var parsedUrl = Uri.parse(_validateUrl(url));
 
       /// validate url
@@ -86,11 +87,17 @@ class NMetaFetcher {
         }
       }
 
+      /// Looping through links to get icons from metadata
       for (var tmp in linkElements) {
+        ///checking if the link exists
         if (tmp.attributes['rel'] == 'apple-touch-icon') {
+          /// Assigning the link for appleIcon
           appleIcon = tmp.attributes['href'];
         }
+
+        /// checking if the link exists
         if (tmp.attributes['rel']?.contains('icon') == true) {
+          /// Assigning the link for favicon
           favIcon = tmp.attributes['href'] ?? '';
         }
       }

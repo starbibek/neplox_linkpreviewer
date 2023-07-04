@@ -12,3 +12,8 @@
 
 * Neplox LinkPreviewer:
 * Latest Release
+
+## 1.0.4
+
+* Neplox LinkPreviewer:
+* Updated Dependencies

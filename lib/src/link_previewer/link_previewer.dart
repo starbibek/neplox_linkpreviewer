@@ -3,6 +3,7 @@ import 'package:neplox_linkpreviewer/src/cache/cache_manager.dart';
 import 'package:neplox_linkpreviewer/src/fetch_elements/fetch_link_index.dart';
 import 'package:neplox_linkpreviewer/src/helper/helpers.dart';
 import 'package:neplox_linkpreviewer/src/model/element_model.dart';
+
 import 'link_preview_styles/style_index.dart';
 
 class NeploxLinkPreviewer extends StatefulWidget {
@@ -75,14 +76,23 @@ class _NeploxLinkPreviewerState extends State<NeploxLinkPreviewer> {
       child: FutureBuilder<List<ElementModel>>(
           future: lotsOfData,
           builder: ((context, snapshot) {
+            /// Checking asynchronously loaded elements
             switch (snapshot.connectionState) {
               case ConnectionState.none:
+
+                /// returning CircularProgress Indicator if none
                 return const Center(child: CircularProgressIndicator());
               case ConnectionState.waiting:
+
+                /// returning CircularProgress Indicator if waiting
                 return const Center(child: CircularProgressIndicator());
               case ConnectionState.active:
+
+                /// returning text ...... if active
                 return const Center(child: Text("........"));
               case ConnectionState.done:
+
+                /// returning  Checking Preview Style and switching accordingly
                 switch (widget.linkPreviewOptions.thumbnailPreviewDirection) {
                   case NThumbnailPreviewDirection.rtl:
 
