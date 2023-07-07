@@ -17,3 +17,8 @@
 
 * Neplox LinkPreviewer:
 * Updated Dependencies
+
+## 1.0.5
+
+* Neplox LinkPreviewer:
+* Added More Customizations support

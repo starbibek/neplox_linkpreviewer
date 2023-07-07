@@ -17,6 +17,11 @@ class NeploxLinkPreviewer extends StatefulWidget {
     this.subtitleColor,
     this.titleFontWeight,
     this.subtitleFontWeight,
+    this.bgColor,
+    this.subtitleMaxLine,
+    this.titleMaxLine,
+    this.titleTextStyle,
+    this.subtitleTextStyle,
   }) : linkPreviewOptions = linkPreviewOptions ?? NLinkPreviewOptions();
 
   /// [url] is the url of the link you want to preview
@@ -30,20 +35,35 @@ class NeploxLinkPreviewer extends StatefulWidget {
   /// [titleFontSize] is the font size of the title of the link preview
   final double? titleFontSize;
 
-  /// [subtitleFontSize] is the font size of the subtitle of the link preview
-  final double? subtitleFontSize;
+  /// [titleFontWeight] is the font weight property of the title of the link preview
+  final double? titleFontWeight;
 
   /// [titleColor] is the color of the title of the link preview
   final Color? titleColor;
 
+  ///[titleMaxLine] is the maxline of the title
+  final int? titleMaxLine;
+
+  /// [subtitleFontSize] is the font size of the subtitle of the link preview
+  final double? subtitleFontSize;
+
+  /// [subtitleFontWeight] is the font weight property of the subtitle of the link preview
+  final double? subtitleFontWeight;
+
   /// [subtitleColor] is the color of the subtitle of the link preview
   final Color? subtitleColor;
 
-  /// [titleFontWeight] is the font weight of the title of the link preview
-  final FontWeight? titleFontWeight;
+  ///[subtitleMaxLine] is the maxline of the title
+  final int? subtitleMaxLine;
 
-  /// [subtitleFontWeight] is the font weight of the subtitle of the link preview
-  final FontWeight? subtitleFontWeight;
+  ///[bgColor] is the color of Card BarckgroundColor
+  final Color? bgColor;
+
+  ///[titleTextStyle]  it TextStyle for the title
+  final TextStyle? titleTextStyle;
+
+  ///[subtitleTextStyle] is TextStyle for subtitle or body content
+  final TextStyle? subtitleTextStyle;
 
   @override
   State<NeploxLinkPreviewer> createState() => _NeploxLinkPreviewerState();
@@ -104,6 +124,13 @@ class _NeploxLinkPreviewerState extends State<NeploxLinkPreviewer> {
                       titleFontSize: widget.titleFontSize,
                       titleColor: widget.titleColor,
                       subtitleFontSize: widget.subtitleFontSize,
+                      bgColor: widget.bgColor,
+                      subtitleFontWeight: widget.subtitleFontWeight,
+                      subtitleMaxLine: widget.subtitleMaxLine,
+                      titleFontWeight: widget.titleFontWeight,
+                      titleMaxLine: widget.titleMaxLine,
+                      subtitleTextStyle: widget.subtitleTextStyle,
+                      titleTextStyle: widget.titleTextStyle,
                     );
                   case NThumbnailPreviewDirection.ltr:
 
@@ -115,6 +142,13 @@ class _NeploxLinkPreviewerState extends State<NeploxLinkPreviewer> {
                       titleFontSize: widget.titleFontSize,
                       titleColor: widget.titleColor,
                       subtitleFontSize: widget.subtitleFontSize,
+                      bgColor: widget.bgColor,
+                      subtitleFontWeight: widget.subtitleFontWeight,
+                      subtitleMaxLine: widget.subtitleMaxLine,
+                      titleFontWeight: widget.titleFontWeight,
+                      titleMaxLine: widget.titleMaxLine,
+                      subtitleTextStyle: widget.subtitleTextStyle,
+                      titleTextStyle: widget.titleTextStyle,
                     );
                   case NThumbnailPreviewDirection.top:
 
@@ -126,6 +160,13 @@ class _NeploxLinkPreviewerState extends State<NeploxLinkPreviewer> {
                       titleFontSize: widget.titleFontSize,
                       titleColor: widget.titleColor,
                       subtitleFontSize: widget.subtitleFontSize,
+                      bgColor: widget.bgColor,
+                      subtitleFontWeight: widget.subtitleFontWeight,
+                      subtitleMaxLine: widget.subtitleMaxLine,
+                      titleFontWeight: widget.titleFontWeight,
+                      titleMaxLine: widget.titleMaxLine,
+                      subtitleTextStyle: widget.subtitleTextStyle,
+                      titleTextStyle: widget.titleTextStyle,
                     );
                   case NThumbnailPreviewDirection.bottom:
 
@@ -137,6 +178,13 @@ class _NeploxLinkPreviewerState extends State<NeploxLinkPreviewer> {
                       titleFontSize: widget.titleFontSize,
                       titleColor: widget.titleColor,
                       subtitleFontSize: widget.subtitleFontSize,
+                      bgColor: widget.bgColor,
+                      subtitleFontWeight: widget.subtitleFontWeight,
+                      subtitleMaxLine: widget.subtitleMaxLine,
+                      titleFontWeight: widget.titleFontWeight,
+                      titleMaxLine: widget.titleMaxLine,
+                      subtitleTextStyle: widget.subtitleTextStyle,
+                      titleTextStyle: widget.titleTextStyle,
                     );
                   case NThumbnailPreviewDirection.none:
 
@@ -148,6 +196,13 @@ class _NeploxLinkPreviewerState extends State<NeploxLinkPreviewer> {
                       titleFontSize: widget.titleFontSize,
                       titleColor: widget.titleColor,
                       subtitleFontSize: widget.subtitleFontSize,
+                      bgColor: widget.bgColor,
+                      subtitleFontWeight: widget.subtitleFontWeight,
+                      subtitleMaxLine: widget.subtitleMaxLine,
+                      titleFontWeight: widget.titleFontWeight,
+                      titleMaxLine: widget.titleMaxLine,
+                      subtitleTextStyle: widget.subtitleTextStyle,
+                      titleTextStyle: widget.titleTextStyle,
                     );
                 }
             }

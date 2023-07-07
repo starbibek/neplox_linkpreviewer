@@ -4,14 +4,22 @@ import 'package:neplox_linkpreviewer/src/link_previewer/link_preview_styles/widg
 import 'package:url_launcher/url_launcher_string.dart';
 
 class NonePreviewStyle extends StatelessWidget {
-  const NonePreviewStyle(
-      {super.key,
-      required this.snapshot,
-      required this.linkPreviewOptions,
-      this.titleFontSize,
-      this.subtitleFontSize,
-      this.titleColor,
-      this.subtitleColor});
+  const NonePreviewStyle({
+    super.key,
+    required this.snapshot,
+    required this.linkPreviewOptions,
+    this.titleColor,
+    this.titleFontWeight,
+    this.titleMaxLine,
+    this.titleFontSize,
+    this.subtitleColor,
+    this.subtitleFontWeight,
+    this.subtitleMaxLine,
+    this.subtitleFontSize,
+    this.bgColor,
+    this.titleTextStyle,
+    this.subtitleTextStyle,
+  });
 
   /// [snapshot] is the data of the link you want to preview
   final ElementModel snapshot;
@@ -22,19 +30,40 @@ class NonePreviewStyle extends StatelessWidget {
   /// [titleFontSize] is the font size of the title of the link preview
   final double? titleFontSize;
 
-  /// [subtitleFontSize] is the font size of the subtitle of the link preview
-  final double? subtitleFontSize;
+  /// [titleFontWeight] is the font weight property of the title of the link preview
+  final double? titleFontWeight;
 
   /// [titleColor] is the color of the title of the link preview
   final Color? titleColor;
 
+  ///[titleMaxLine] is the maxline of the title
+  final int? titleMaxLine;
+
+  /// [subtitleFontSize] is the font size of the subtitle of the link preview
+  final double? subtitleFontSize;
+
+  /// [subtitleFontWeight] is the font weight property of the subtitle of the link preview
+  final double? subtitleFontWeight;
+
   /// [subtitleColor] is the color of the subtitle of the link preview
   final Color? subtitleColor;
+
+  ///[subtitleMaxLine] is the maxline of the title
+  final int? subtitleMaxLine;
+
+  ///[bgColor] is the color of Card BarckgroundColor
+  final Color? bgColor;
+
+  ///[titleTextStyle]  it TextStyle for the title
+  final TextStyle? titleTextStyle;
+
+  ///[subtitleTextStyle] is TextStyle for subtitle or body content
+  final TextStyle? subtitleTextStyle;
   @override
   Widget build(BuildContext context) {
     return Material(
       clipBehavior: Clip.antiAlias,
-      color: Colors.white,
+      color: bgColor ?? Colors.white,
       borderRadius: BorderRadius.circular(10),
       child: InkWell(
         // if urlLaunch is enabled then only it will be clickable
@@ -75,10 +104,26 @@ class NonePreviewStyle extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                headerTextWidget(context, "${snapshot.title}"),
+                bodyTextWidget(
+                  context,
+                  "${snapshot.description}",
+                  fontSize: subtitleFontSize,
+                  fontWeight: subtitleFontWeight,
+                  textColor: subtitleColor,
+                  maxline: subtitleMaxLine,
+                  textStyle: titleTextStyle,
+                ),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                  child: bodyTextWidget(context, "${snapshot.description}"),
+                  child: bodyTextWidget(
+                    context,
+                    "${snapshot.description}",
+                    fontSize: subtitleFontSize,
+                    fontWeight: subtitleFontWeight,
+                    textColor: subtitleColor,
+                    maxline: subtitleMaxLine,
+                    textStyle: subtitleTextStyle,
+                  ),
                 ),
               ],
             ),

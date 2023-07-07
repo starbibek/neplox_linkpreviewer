@@ -5,16 +5,22 @@ import 'package:url_launcher/url_launcher_string.dart';
 import 'widgets/text_widgets.dart';
 
 class BottomPreviewStyle extends StatelessWidget {
-  const BottomPreviewStyle(
-      {super.key,
-      required this.snapshot,
-      required this.linkPreviewOptions,
-      this.titleFontSize,
-      this.subtitleFontSize,
-      this.titleColor,
-      this.subtitleColor,
-      this.subtitleFontWeight,
-      this.titleFontWeight});
+  const BottomPreviewStyle({
+    super.key,
+    required this.snapshot,
+    required this.linkPreviewOptions,
+    this.titleColor,
+    this.titleFontWeight,
+    this.titleMaxLine,
+    this.titleFontSize,
+    this.subtitleColor,
+    this.subtitleFontWeight,
+    this.subtitleMaxLine,
+    this.subtitleFontSize,
+    this.bgColor,
+    this.titleTextStyle,
+    this.subtitleTextStyle,
+  });
 
   /// [snapshot] is the data of the link you want to preview
   final ElementModel snapshot;
@@ -25,26 +31,41 @@ class BottomPreviewStyle extends StatelessWidget {
   /// [titleFontSize] is the font size of the title of the link preview
   final double? titleFontSize;
 
-  /// [subtitleFontSize] is the font size of the subtitle of the link preview
-  final double? subtitleFontSize;
+  /// [titleFontWeight] is the font weight property of the title of the link preview
+  final double? titleFontWeight;
 
   /// [titleColor] is the color of the title of the link preview
   final Color? titleColor;
 
+  ///[titleMaxLine] is the maxline of the title
+  final int? titleMaxLine;
+
+  /// [subtitleFontSize] is the font size of the subtitle of the link preview
+  final double? subtitleFontSize;
+
+  /// [subtitleFontWeight] is the font weight property of the subtitle of the link preview
+  final double? subtitleFontWeight;
+
   /// [subtitleColor] is the color of the subtitle of the link preview
   final Color? subtitleColor;
 
-  /// [titleFontWeight] is the font weight of the title of the link preview
-  final FontWeight? titleFontWeight;
+  ///[subtitleMaxLine] is the maxline of the title
+  final int? subtitleMaxLine;
 
-  /// [subtitleFontWeight] is the font weight of the subtitle of the link preview
-  final FontWeight? subtitleFontWeight;
+  ///[bgColor] is the color of Card BarckgroundColor
+  final Color? bgColor;
+
+  ///[titleTextStyle]  it TextStyle for the title
+  final TextStyle? titleTextStyle;
+
+  ///[subtitleTextStyle] is TextStyle for subtitle or body content
+  final TextStyle? subtitleTextStyle;
   @override
   Widget build(BuildContext context) {
     return Material(
       clipBehavior: Clip.antiAlias,
-      color: Colors.white,
-      shadowColor: Colors.black38,
+      color: bgColor ?? Theme.of(context).cardColor,
+      shadowColor: bgColor ?? Colors.grey.shade800,
       elevation: 4,
       borderRadius: BorderRadius.circular(10),
       child: InkWell(
@@ -81,6 +102,8 @@ class BottomPreviewStyle extends StatelessWidget {
                       fontSize: titleFontSize,
                       fontWeight: titleFontWeight,
                       textColor: titleColor,
+                      maxline: titleMaxLine,
+                      textStyle: titleTextStyle,
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
@@ -90,6 +113,8 @@ class BottomPreviewStyle extends StatelessWidget {
                         fontSize: subtitleFontSize,
                         fontWeight: subtitleFontWeight,
                         textColor: subtitleColor,
+                        maxline: subtitleMaxLine,
+                        textStyle: subtitleTextStyle,
                       ),
                     ),
                   ],
