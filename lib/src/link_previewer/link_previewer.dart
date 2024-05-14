@@ -87,7 +87,7 @@ class _NeploxLinkPreviewerState extends State<NeploxLinkPreviewer> {
 
   /// [getData] is the function that fetches the meta data from the url
   Future<ElementModel> getData() async {
-    return await nfetch.fetchNow(widget.url);
+    return await nfetch.fetch(widget.url);
   }
 
   @override

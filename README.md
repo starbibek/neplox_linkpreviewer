@@ -1,86 +1,50 @@
 # neplox_linkpreviewer
 
-The `neplox_linkpreviewer` package is a Flutter package that allows you to fetch metadata from a URL link and provides a link preview. It also allows users to customize the link preview and fetched metadata to implement them in their own Widgets.
+[![pub package](https://img.shields.io/pub/v/neplox_linkpreviewer.svg)](https://pub.dev/packages/neplox_linkpreviewer)
+
+A Flutter package for fetching and displaying rich link previews with customizable styling and behavior. 
+
+## Features
+
+- **Automatic Metadata Extraction:** Easily fetch title, description, images, and icons from URLs.
+- **Built-in Preview Widget:** `NeploxLinkPreviewer` provides a pre-styled link preview.
+- **Customizable:**
+    - Control thumbnail positioning (`NThumbnailPreviewDirection`).
+    - Style text and background colors.
+    - Choose whether to launch URLs in-app or in an external browser (`NURLLaunch`, `NURLLaunchIn`).
+- **Flexible Metadata Access:** Use `NeploxMetaDataFetcher` to get metadata for your own custom UI implementations.
+- **Caching:** Improves performance by caching fetched metadata.
+- **Extensible:** Supports custom widget builders for full control over the preview layout.
+- **Error Handling:** Gracefully handles invalid URLs and network issues.
 
 ## Installation
 
-Add `neplox_linkpreviewer` as a dependency in your `pubspec.yaml` file:
+Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  neplox_linkpreviewer: 1.0.4
-```
+  neplox_linkpreviewer: ^1.0.4 
 
+``````
 ## Usage
-
-To fetch a link preview from a URL, you can use the `NeploxLinkPreviewer` widget:
-
-```dart
-class LinkPreviewer extends StatefulWidget {
-  const LinkPreviewer({Key? key, required this.url});
-  final String url;
-
-  @override
-  _LinkPreviewerState createState() => _LinkPreviewerState();
-}
-
-class _LinkPreviewerState extends State<LinkPreviewer> {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: NeploxLinkPreviewer(
-        url: widget.url,
-        linkPreviewOptions: NLinkPreviewOptions(
-          urlContentType: NURLContentType.video,
-          urlLaunch: NURLLaunch.enable,
-          urlLaunchIn: NURLLaunchIn.browser,
-          thumbnailPreviewDirection: NThumbnailPreviewDirection.bottom,
-        ),
-      ),
-    );
-  }
-}
-```
-
-In the above example, the `NeploxLinkPreviewer` widget is used to fetch and display the link preview for the specified `url`. You can customize the link preview options by providing a `NLinkPreviewOptions` object.
-
-To fetch metadata for your own Widget, you can use the `NeploxMetaDataFetcher`:
+### 1. Using the Built-in Preview Widget
 
 ```dart
-class ExampleMetaFetcher extends StatefulWidget {
-  const ExampleMetaFetcher({Key? key});
+NeploxLinkPreviewer(
+  url: '[https://example.com](https://example.com)',
+  linkPreviewOptions: NLinkPreviewOptions(
+    thumbnailPreviewDirection: NThumbnailPreviewDirection.bottom, 
+    urlLaunch: NURLLaunch.enable,
+    urlLaunchIn: NURLLaunchIn.browser,  // Or NURLLaunchIn.app
+  ),
+  // Customize styles here (titleColor, subtitleColor, etc.)
+)
 
-  @override
-  _ExampleMetaFetcherState createState() => _ExampleMetaFetcherState();
-}
+``````
+### 2. Fetching Meta Data For Custom Widgets
 
-class _ExampleMetaFetcherState extends State<ExampleMetaFetcher> {
-  final NeploxMetaDataFetcher _metaDataFetcher = NeploxMetaDataFetcher.instance;
+```dart
+final metaDataFetcher = NeploxMetaDataFetcher.instance;
+final elementModel = await metaDataFetcher.fetchData('[https://example.com](https://example.com)');
 
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<ElementModel>(
-      future: _metaDataFetcher.fetchData(
-          "https://ekantipur.com/news/2023/02/05/167556100681196555.html"),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Text(snapshot.data?.title.toString() ?? "No Title");
-        } else {
-          return const Text("No data");
-        }
-      },
-    );
-  }
-}
-```
-
-In the above example, the `NeploxMetaDataFetcher` is used to fetch metadata for the specified URL. The fetched data can be used to implement your own Widget. The `fetchData` method returns a `Future` that resolves to an `ElementModel` object containing the fetched metadata.
-
-## Documentation
-
-For more details and advanced usage, please refer to the [API documentation](https://pub.dev/documentation/neplox_linkpreviewer/latest/).
-
-## License
-
-This package is released under the [MIT License](https://opensource.org/licenses/MIT).
+// Use elementModel.title, elementModel.description, etc. to build your own UI.

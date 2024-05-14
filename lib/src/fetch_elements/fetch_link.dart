@@ -16,6 +16,6 @@ class NeploxMetaDataFetcher {
   ///
   ///return ElementModel from the url
   Future<ElementModel> fetchData(String url) async =>
-      await NMetaFetcher.instance.fetchNow(url);
+      await NMetaFetcher.instance.fetch(url);
   // END getData/ Fetch Meta Data
 }
