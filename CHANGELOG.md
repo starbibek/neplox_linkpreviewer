@@ -22,3 +22,8 @@
 
 * Neplox LinkPreviewer:
 * Added More Customizations support
+
+## 1.0.6
+
+* Neplox LinkPreviewer:
+* Migrate to the latest version of flutter 3.19.6

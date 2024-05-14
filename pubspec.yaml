@@ -1,6 +1,6 @@
 name: neplox_linkpreviewer
 description: LinkPreviewer Package to show Normal URL link elements and it also provide Element object for custom UI implementation.
-version: 1.0.5
+version: 1.0.6
 homepage: https://github.com/starbibek/neplox_linkpreviewer
 
 environment:
