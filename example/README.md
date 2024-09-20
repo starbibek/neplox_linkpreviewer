@@ -1,4 +1,4 @@
-# linkpreview_tester
+# example
 
 A new Flutter project.
 

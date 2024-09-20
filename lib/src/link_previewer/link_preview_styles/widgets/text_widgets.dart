@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../../../index.dart';
 
@@ -8,7 +8,8 @@ headerTextWidget(BuildContext context, String text,
     text,
     maxLines: maxline ?? 2,
     softWrap: true,
-    textScaleFactor: ((fontSize ?? 14)) / (((fontSize ?? 14)) + (maxline ?? 2)),
+    textScaler: TextScaler.linear(
+        ((fontSize ?? 14)) / (((fontSize ?? 14)) + (maxline ?? 2))),
     overflow: TextOverflow.ellipsis,
     style: textStyle ??
         TextStyle(
@@ -24,7 +25,8 @@ bodyTextWidget(BuildContext context, String text,
     text,
     maxLines: maxline ?? 4,
     softWrap: true,
-    textScaleFactor: ((fontSize ?? 12)) / (((fontSize ?? 12)) + (maxline ?? 4)),
+    textScaler: TextScaler.linear(
+        ((fontSize ?? 12)) / (((fontSize ?? 12)) + (maxline ?? 4))),
     style: textStyle ??
         TextStyle(
           fontSize: fontSize ?? 0.012.sres(context),

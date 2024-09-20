@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:neplox_linkpreviewer/neplox_linkpreviewer.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
+import 'style/styles.dart';
 import 'widgets/text_widgets.dart';
 
 class LTRPreviewStyle extends StatelessWidget {
@@ -9,63 +10,22 @@ class LTRPreviewStyle extends StatelessWidget {
     super.key,
     required this.snapshot,
     required this.linkPreviewOptions,
-    this.titleColor,
-    this.titleFontWeight,
-    this.titleMaxLine,
-    this.titleFontSize,
-    this.subtitleColor,
-    this.subtitleFontWeight,
-    this.subtitleMaxLine,
-    this.subtitleFontSize,
-    this.bgColor,
-    this.titleTextStyle,
-    this.subtitleTextStyle,
+    required this.nTypographyStyle,
+    required this.nCardStyle,
   });
 
-  /// [snapshot] is the data of the link you want to preview
   final ElementModel snapshot;
-
-  /// [linkPreviewOptions] is the options you want to set for the link preview
   final NLinkPreviewOptions linkPreviewOptions;
-
-  /// [titleFontSize] is the font size of the title of the link preview
-  final double? titleFontSize;
-
-  /// [titleFontWeight] is the font weight property of the title of the link preview
-  final double? titleFontWeight;
-
-  /// [titleColor] is the color of the title of the link preview
-  final Color? titleColor;
-
-  ///[titleMaxLine] is the maxline of the title
-  final int? titleMaxLine;
-
-  /// [subtitleFontSize] is the font size of the subtitle of the link preview
-  final double? subtitleFontSize;
-
-  /// [subtitleFontWeight] is the font weight property of the subtitle of the link preview
-  final double? subtitleFontWeight;
-
-  /// [subtitleColor] is the color of the subtitle of the link preview
-  final Color? subtitleColor;
-
-  ///[subtitleMaxLine] is the maxline of the title
-  final int? subtitleMaxLine;
-
-  ///[bgColor] is the color of Card BarckgroundColor
-  final Color? bgColor;
-
-  ///[titleTextStyle]  it TextStyle for the title
-  final TextStyle? titleTextStyle;
-
-  ///[subtitleTextStyle] is TextStyle for subtitle or body content
-  final TextStyle? subtitleTextStyle;
+  final NTypographyStyle nTypographyStyle;
+  final NCardStyle nCardStyle;
   @override
   Widget build(BuildContext context) {
     return Material(
       clipBehavior: Clip.antiAlias,
-      color: bgColor ?? Theme.of(context).cardColor,
-      borderRadius: BorderRadius.circular(10),
+      color: nCardStyle.bgColor,
+      shadowColor: nCardStyle.shadowColor,
+      elevation: nCardStyle.elevation,
+      borderRadius: nCardStyle.borderRadius,
       child: InkWell(
         // if urlLaunch is enabled then only it will be clickable
         onTap: linkPreviewOptions.urlLaunch == NURLLaunch.enable
@@ -78,8 +38,8 @@ class LTRPreviewStyle extends StatelessWidget {
             : null,
         child: ConstrainedBox(
           constraints: BoxConstraints(
-            minWidth: 0.5.sw(context),
-            minHeight: 0.05.sh(context),
+            minWidth: 0.5 * MediaQuery.of(context).size.width,
+            minHeight: 0.05 * MediaQuery.of(context).size.height,
           ),
           child: FittedBox(
             child: Row(
@@ -112,11 +72,11 @@ class LTRPreviewStyle extends StatelessWidget {
                         child: headerTextWidget(
                           context,
                           "${snapshot.title}",
-                          fontSize: titleFontSize,
-                          fontWeight: titleFontWeight,
-                          textColor: titleColor,
-                          maxline: titleMaxLine,
-                          textStyle: titleTextStyle,
+                          fontSize: nTypographyStyle.titleFontSize,
+                          fontWeight: nTypographyStyle.titleFontWeight,
+                          textColor: nTypographyStyle.titleColor,
+                          maxline: nTypographyStyle.titleMaxLine,
+                          textStyle: nTypographyStyle.titleTextStyle,
                         ),
                       ),
                       Padding(
@@ -124,11 +84,11 @@ class LTRPreviewStyle extends StatelessWidget {
                         child: bodyTextWidget(
                           context,
                           "${snapshot.description}",
-                          fontSize: subtitleFontSize,
-                          fontWeight: subtitleFontWeight,
-                          textColor: subtitleColor,
-                          maxline: subtitleMaxLine,
-                          textStyle: subtitleTextStyle,
+                          fontSize: nTypographyStyle.bodyFontSize,
+                          fontWeight: nTypographyStyle.bodyFontWeight,
+                          textColor: nTypographyStyle.bodyColor,
+                          maxline: nTypographyStyle.bodyMaxLine,
+                          textStyle: nTypographyStyle.bodyTextStyle,
                         ),
                       ),
                     ],

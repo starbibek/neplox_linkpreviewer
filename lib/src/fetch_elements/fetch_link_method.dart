@@ -1,4 +1,5 @@
 import 'dart:developer';
+
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http; // Renamed to avoid conflicts
 import 'package:neplox_linkpreviewer/src/cache/cache_manager.dart';
@@ -21,10 +22,12 @@ class NMetaFetcher {
 
     // Check if cached data exists and hasn't expired
     if (prefs.containsKey(url)) {
-      final cachedData = cacheManager.getCache(url);
+      final ElementModel cachedData = cacheManager.getCache(url);
       final cachedTime = DateTime.parse(prefs.getString('${url}_cachedAt')!);
 
-      if (DateTime.now().difference(cachedTime) <= cacheDuration) {
+      // Checking Cached Time and checking cached data is not empty
+      if (DateTime.now().difference(cachedTime) <= cacheDuration &&
+          !cachedData.isEmpty()) {
         return cachedData; // Return cached data if not expired
       } else {
         // Expired, so remove it
@@ -103,7 +106,7 @@ class NMetaFetcher {
       );
     } catch (e) {
       log('Error: $e', name: 'NeploxLinkPreviewer');
-      return ElementModel();
+      return ElementModel.empty();
     }
   }
 

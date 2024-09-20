@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import '../model/element_model.dart';
 import 'fetch_link_method.dart';
 
@@ -15,7 +17,9 @@ class NeploxMetaDataFetcher {
   ///[url] is the url of the website you want to fetch data from
   ///
   ///return ElementModel from the url
-  Future<ElementModel> fetchData(String url) async =>
-      await NMetaFetcher.instance.fetch(url);
-  // END getData/ Fetch Meta Data
+  Future<ElementModel> fetchData(String url) async {
+    log("Url", error: url);
+    return await NMetaFetcher.instance.fetch(url);
+    // END getData/ Fetch Meta Data
+  }
 }

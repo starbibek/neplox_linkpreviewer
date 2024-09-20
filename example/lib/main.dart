@@ -33,7 +33,6 @@ class _MyHomePageState extends State<MyHomePage> {
   List<String> urls = [
     "https://ekantipur.com/news/2023/02/05/167556100681196555.html",
     "https://www.youtube.com/watch?v=A9hcJgtnm6Q&list=RDRDwrng3YkNU&index=5",
-    "https://shobhit.com.np/flubot-warning-over-major-android-package-delivery-scam/2193/",
     "https://www.youtube.com/watch?v=q_HEQajNwyY&list=RDq_HEQajNwyY&start_radio=1",
     "https://www.youtube.com/watch?v=qik_1dDvzEs&list=RDq_HEQajNwyY&index=3",
   ];

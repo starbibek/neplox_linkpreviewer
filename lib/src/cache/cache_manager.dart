@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:neplox_linkpreviewer/src/model/element_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,23 +22,27 @@ class NCacheManager {
 
 // BEGIN set Meta Data Cache.
   void setCache(ElementModel cache) {
-    var data = elementModelToJson(cache);
+    var data = ElementModel.elementModelToJson(cache);
     prefs?.setString("${cache.link}", data);
   }
 // END set Meta Data Cache.
 
 // BEGIN getCached Meta Data.
-  getCache(String link) {
-    String data = (prefs?.getString(link) ?? "").toString();
-    if (data != "") {
-      ElementModel cache = elementModelFromJson(data);
-      return cache;
-    } else {
-      return ElementModel();
+  ElementModel getCache(String link) {
+    try {
+      String data = (prefs?.getString(link) ?? "").toString();
+      if (data != "") {
+        ElementModel cache = ElementModel.fromJson(jsonDecode(data.toString()));
+        return cache;
+      } else {
+        return ElementModel.empty();
+      }
+    } catch (ex) {
+      print("Error while getting cache: $ex");
+      return ElementModel.empty();
     }
   }
 // END getCached Meta Data.
-
 }
 
 // END NCacheManager.

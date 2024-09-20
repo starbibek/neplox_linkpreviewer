@@ -3,68 +3,29 @@ import 'package:neplox_linkpreviewer/neplox_linkpreviewer.dart';
 import 'package:neplox_linkpreviewer/src/link_previewer/link_preview_styles/widgets/text_widgets.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
+import 'style/styles.dart';
+
 class NonePreviewStyle extends StatelessWidget {
   const NonePreviewStyle({
     super.key,
     required this.snapshot,
     required this.linkPreviewOptions,
-    this.titleColor,
-    this.titleFontWeight,
-    this.titleMaxLine,
-    this.titleFontSize,
-    this.subtitleColor,
-    this.subtitleFontWeight,
-    this.subtitleMaxLine,
-    this.subtitleFontSize,
-    this.bgColor,
-    this.titleTextStyle,
-    this.subtitleTextStyle,
+    required this.nTypographyStyle,
+    required this.nCardStyle,
   });
 
-  /// [snapshot] is the data of the link you want to preview
   final ElementModel snapshot;
-
-  /// [linkPreviewOptions] is the options you want to set for the link preview
   final NLinkPreviewOptions linkPreviewOptions;
-
-  /// [titleFontSize] is the font size of the title of the link preview
-  final double? titleFontSize;
-
-  /// [titleFontWeight] is the font weight property of the title of the link preview
-  final double? titleFontWeight;
-
-  /// [titleColor] is the color of the title of the link preview
-  final Color? titleColor;
-
-  ///[titleMaxLine] is the maxline of the title
-  final int? titleMaxLine;
-
-  /// [subtitleFontSize] is the font size of the subtitle of the link preview
-  final double? subtitleFontSize;
-
-  /// [subtitleFontWeight] is the font weight property of the subtitle of the link preview
-  final double? subtitleFontWeight;
-
-  /// [subtitleColor] is the color of the subtitle of the link preview
-  final Color? subtitleColor;
-
-  ///[subtitleMaxLine] is the maxline of the title
-  final int? subtitleMaxLine;
-
-  ///[bgColor] is the color of Card BarckgroundColor
-  final Color? bgColor;
-
-  ///[titleTextStyle]  it TextStyle for the title
-  final TextStyle? titleTextStyle;
-
-  ///[subtitleTextStyle] is TextStyle for subtitle or body content
-  final TextStyle? subtitleTextStyle;
+  final NTypographyStyle nTypographyStyle;
+  final NCardStyle nCardStyle;
   @override
   Widget build(BuildContext context) {
     return Material(
       clipBehavior: Clip.antiAlias,
-      color: bgColor ?? Colors.white,
-      borderRadius: BorderRadius.circular(10),
+      color: nCardStyle.bgColor,
+      shadowColor: nCardStyle.shadowColor,
+      elevation: nCardStyle.elevation,
+      borderRadius: nCardStyle.borderRadius,
       child: InkWell(
         // if urlLaunch is enabled then only it will be clickable
         onTap: linkPreviewOptions.urlLaunch == NURLLaunch.enable
@@ -107,22 +68,22 @@ class NonePreviewStyle extends StatelessWidget {
                 bodyTextWidget(
                   context,
                   "${snapshot.description}",
-                  fontSize: subtitleFontSize,
-                  fontWeight: subtitleFontWeight,
-                  textColor: subtitleColor,
-                  maxline: subtitleMaxLine,
-                  textStyle: titleTextStyle,
+                    fontSize: nTypographyStyle.bodyFontSize,
+                        fontWeight: nTypographyStyle.bodyFontWeight,
+                        textColor: nTypographyStyle.bodyColor,
+                        maxline: nTypographyStyle.bodyMaxLine,
+                        textStyle: nTypographyStyle.bodyTextStyle,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                   child: bodyTextWidget(
                     context,
                     "${snapshot.description}",
-                    fontSize: subtitleFontSize,
-                    fontWeight: subtitleFontWeight,
-                    textColor: subtitleColor,
-                    maxline: subtitleMaxLine,
-                    textStyle: subtitleTextStyle,
+                    fontSize: nTypographyStyle.titleFontSize,
+                      fontWeight: nTypographyStyle.titleFontWeight,
+                      textColor: nTypographyStyle.titleColor,
+                      maxline: nTypographyStyle.titleMaxLine,
+                      textStyle: nTypographyStyle.titleTextStyle,
                   ),
                 ),
               ],
