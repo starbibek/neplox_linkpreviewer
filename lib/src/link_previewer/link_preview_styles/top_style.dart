@@ -67,7 +67,7 @@ class TopPreviewStyle extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    bodyTextWidget(
+                    headerTextWidget(
                       context,
                       "${snapshot.description}",
                       fontSize: nTypographyStyle.titleFontSize,

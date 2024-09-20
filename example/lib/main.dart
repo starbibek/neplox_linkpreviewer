@@ -73,7 +73,8 @@ class _LinkPreviwerState extends State<LinkPreviwer> {
         linkPreviewOptions: NLinkPreviewOptions(
             urlLaunch: NURLLaunch.enable,
             urlLaunchIn: NURLLaunchIn.browser,
-            thumbnailPreviewDirection: NThumbnailPreviewDirection.bottom),
+            thumbnailPreviewDirection: NThumbnailPreviewDirection.top),
+            
       ),
     );
   }

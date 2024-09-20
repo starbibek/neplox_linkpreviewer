@@ -1,46 +1,36 @@
 import 'package:flutter/material.dart';
 
-/// This file contains all the helper functions and classes
-/// used in the app.
-/// This file is part of the NURL project.
-///
+/// NURLLaunch enum to define link is clickable or not
+/// <summary>
 /// [enable] - Enable the URL launch.
-///
 /// [disable] - Disable the URL launch.
+/// </summary>
 enum NURLLaunch { enable, disable }
 
+/// NURLLaunchIn enum to define url lauch methods
+/// <summary>
 /// [browser] - Launch the URL in the browser.
-///
 /// [app] - Launch the URL in the app.
-///
 /// [none] - Don't launch the URL.
+/// </summary>
 enum NURLLaunchIn { browser, app, none }
 
-/// [image] - The URL is an image.
-///
-/// [video] - The URL is a video.
-///
-/// [audio] - The URL is an audio.
-///
-/// [file] - The URL is a file.
-///
-/// [url] - The URL is a URL.
-enum NURLContentType { image, video, audio, file, url }
-
-/// [rtl] - Thumbnail preview in right and title and description to left.
-///
-/// [ltr] - Thumbnail preview in left and title and description to right.
-///
-/// [none] - No thumbnail preview.\n
-///
-/// [top] - Thumbnail preview in the top middle.\n
-///
-/// [bottom] - Thumbnail preview in the bottom middle.\n
+/// NThumbnailPreviewDirection enum for links preview direction.
+/// <summary>
+/// [none] - No thumbnail preview.
+/// [top] - Thumbnail preview in the top middle.
+/// [bottom] - Thumbnail preview in the bottom middle.
+/// [ltr] - Thumbnail preview in the left middle.
+/// [rtl] - Thumbnail preview in the right middle.
+/// </summary>
 enum NThumbnailPreviewDirection { rtl, ltr, none, top, bottom }
 
-enum NDecoration { none, box, shadow, boxShadow }
-
-// BEGIN NLinkPreviewOptions.
+/// NLinkPreviewOptions public class with properties to configure url launch
+/// <summary>
+/// [urlLaunch] - Options to configure url launch
+/// [urlLaunchIn] - Options to configure url launch methods
+/// [thumbnailPreviewDirection] - Options to configure link preview direction
+/// </summary>
 class NLinkPreviewOptions {
   NURLLaunch urlLaunch;
   NURLLaunchIn urlLaunchIn;
@@ -49,7 +39,6 @@ class NLinkPreviewOptions {
     /// This is the constructor for the [NLinkPreviewOptions] class.
     ///
     /// [urlLaunch] - Enable or disable the URL launch. Default is [NURLLaunch.enable].
-
     this.urlLaunch = NURLLaunch.enable,
 
     /// [urlLaunchIn] - Launch the URL in the browser or app. Default is [NURLLaunchIn.browser].
