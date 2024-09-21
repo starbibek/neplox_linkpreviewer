@@ -52,8 +52,8 @@ NeploxLinkPreviewer(
     urlLaunchIn: NURLLaunchIn.app,
   ),
  cardStyle:NCardStyle( // Card style
-    width: 0.95 * MediaQuery.of(context).size.with,
-    height: 0.45 * MediaQuery.of(context).size.with,
+    width: 0.95 * MediaQuery.of(context).size.width,
+    height: 0.45 * MediaQuery.of(context).size.width,
    )
 )
 
@@ -72,7 +72,7 @@ final elementModel = await metaDataFetcher.fetchData('[https://example.com](http
 /// Display Direction. [normal,top,bottom,ltr,rtl]
 final NThumbnailPreviewDirection thumbnailPreviewDirection;
 
-/// Properties to configure URL Launch [enbable,disable]
+/// Properties to configure URL Launch [enable,disable]
 final NURLLaunch urlLaunch;
 
 /// Properties to configure URL Launch in [browser,app,none]
@@ -82,5 +82,5 @@ final NURLLaunchIn urlLaunchIn;
 final NCardStyle cardStyle;
 
 /// Properties to configure Typography [typographyStyle]
-final NCTypographyStyle typographyStyle;
+final NTypographyStyle typographyStyle;
 ``````
