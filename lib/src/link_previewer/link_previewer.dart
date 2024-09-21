@@ -8,12 +8,8 @@ import 'package:neplox_linkpreviewer/src/model/element_model.dart';
 import '../helper/style/styles.dart';
 
 /// Neplox link preview Widget
-/// [url] is the url of the link you want to preview
-/// [typographyStyle] - contain properties to style title, and body text
-/// [cardStyle] - contain properties to style card
-/// [getData] is the function that fetches the meta data from the url
-/// [cacheManager] is the instance of the cache manager
-class NeploxLinkPreviewer<T> extends StatefulWidget {
+
+class NeploxLinkPreviewer extends StatefulWidget {
   NeploxLinkPreviewer({
     super.key,
     required this.url,
@@ -61,9 +57,16 @@ class NeploxLinkPreviewer<T> extends StatefulWidget {
             );
 
   // NeploxLinkPreviewer properties
+  /// [url] - url of the website from where metadata is retrieved
   final String url;
+
+  /// [linkPreviewOptions] - contain properties to handle url launch, ui direction etc.
   final NLinkPreviewOptions linkPreviewOptions;
+
+  /// [typographyStyle] - contain properties to style title, and body text
   final NTypographyStyle typographyStyle;
+
+  /// [cardStyle] - contain properties to style card
   final NCardStyle cardStyle;
 
 // NeploxLinkPreviewer deprecated properties
@@ -95,7 +98,10 @@ class NeploxLinkPreviewer<T> extends StatefulWidget {
 }
 
 class _NeploxLinkPreviewerState extends State<NeploxLinkPreviewer> {
+  /// [nFetch] is the instance of the meta data fetch request
   final NMetaFetcher nfetch = NMetaFetcher.instance;
+
+  /// [lotsOfData] is the contain data from url meta data
   late final lotsOfData = Future.wait(
     [
       getData(),
