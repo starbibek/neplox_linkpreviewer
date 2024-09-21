@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:neplox_linkpreviewer/src/cache/cache_manager.dart';
 import 'package:neplox_linkpreviewer/src/fetch_elements/fetch_link_index.dart';
 import 'package:neplox_linkpreviewer/src/helper/helpers.dart';
+import 'package:neplox_linkpreviewer/src/helper/ncard_view.dart';
 import 'package:neplox_linkpreviewer/src/model/element_model.dart';
 
-import 'link_preview_styles/style/styles.dart';
-import 'link_preview_styles/style_index.dart';
+import '../helper/style/styles.dart';
 
 /// Neplox link preview Widget
 /// [url] is the url of the link you want to preview
@@ -70,7 +70,7 @@ class NeploxLinkPreviewer<T> extends StatefulWidget {
   @Deprecated('Use TypographyStyle instead.')
   final double? titleFontSize;
   @Deprecated('Use TypographyStyle instead.')
-  final double? titleFontWeight;
+  final FontWeight? titleFontWeight;
   @Deprecated('Use TypographyStyle instead.')
   final Color? titleColor;
   @Deprecated('Use TypographyStyle instead.')
@@ -80,7 +80,7 @@ class NeploxLinkPreviewer<T> extends StatefulWidget {
   @Deprecated('Use TypographyStyle instead.')
   final double? subtitleFontSize;
   @Deprecated('Use TypographyStyle instead.')
-  final double? subtitleFontWeight;
+  final FontWeight? subtitleFontWeight;
   @Deprecated('Use TypographyStyle instead.')
   final Color? subtitleColor;
   @Deprecated('Use TypographyStyle instead.')
@@ -108,12 +108,21 @@ class _NeploxLinkPreviewerState extends State<NeploxLinkPreviewer> {
     super.initState();
   }
 
+  @protected
   Future<ElementModel> getData() async {
     return await nfetch.fetch(widget.url);
   }
 
   @override
   Widget build(BuildContext context) {
+    double width = widget.cardStyle.width ??
+        0.95 *
+            MediaQuery.of(context)
+                .size
+                .width; // Default to 95% of available width
+    double height =
+        widget.linkPreviewOptions.getCardHeight(context, widget.cardStyle);
+
     return Material(
       child: FutureBuilder<List<ElementModel>>(
           future: lotsOfData,
@@ -122,60 +131,38 @@ class _NeploxLinkPreviewerState extends State<NeploxLinkPreviewer> {
             switch (snapshot.connectionState) {
               case ConnectionState.none:
                 // returning CircularProgress Indicator if none
-                return const Center(child: CircularProgressIndicator());
+                return SizedBox(
+                  width: width,
+                  child: const Center(child: CircularProgressIndicator()),
+                );
               case ConnectionState.waiting:
                 // returning CircularProgress Indicator if waiting
-                return const Center(child: CircularProgressIndicator());
+                return SizedBox(
+                    width: width,
+                    height: height,
+                    child: const Center(child: CircularProgressIndicator()));
               case ConnectionState.active:
                 // returning text ...... if active
-                return const Center(child: Text("........"));
+                return SizedBox(
+                    width: width,
+                    height: height,
+                    child: const Center(child: Text("........")));
               case ConnectionState.done:
                 if (!snapshot.hasData) {
-                  return Center(child: Text(" Has DATA ${snapshot.data}"));
+                  return SizedBox(
+                      width: width,
+                      height: height,
+                      child: const Center(
+                          child: Text("Error while fetching data")));
                 }
-                // returning  Checking Preview Style and switching accordingly
-                switch (widget.linkPreviewOptions.thumbnailPreviewDirection) {
-                  case NThumbnailPreviewDirection.rtl:
-                    // [rtl] is the direction of the thumbnail of the link preview
-                    return RTLPreviewStyle(
+                return SizedBox(
+                  width: 0.95 * MediaQuery.of(context).size.width,
+                  child: NCardView(
                       snapshot: snapshot.data![0],
                       linkPreviewOptions: widget.linkPreviewOptions,
-                      nCardStyle: widget.cardStyle,
                       nTypographyStyle: widget.typographyStyle,
-                    );
-                  case NThumbnailPreviewDirection.ltr:
-                    // [ltr] is the direction of the thumbnail of the link preview
-                    return LTRPreviewStyle(
-                      snapshot: snapshot.data![0],
-                      linkPreviewOptions: widget.linkPreviewOptions,
-                      nCardStyle: widget.cardStyle,
-                      nTypographyStyle: widget.typographyStyle,
-                    );
-                  case NThumbnailPreviewDirection.top:
-                    // [top] is the direction of the thumbnail of the link preview
-                    return TopPreviewStyle(
-                      snapshot: snapshot.data![0],
-                      linkPreviewOptions: widget.linkPreviewOptions,
-                      nCardStyle: widget.cardStyle,
-                      nTypographyStyle: widget.typographyStyle,
-                    );
-                  case NThumbnailPreviewDirection.bottom:
-                    // [bottom] is the direction of the thumbnail of the link preview
-                    return BottomPreviewStyle(
-                      snapshot: snapshot.data![0],
-                      linkPreviewOptions: widget.linkPreviewOptions,
-                      nCardStyle: widget.cardStyle,
-                      nTypographyStyle: widget.typographyStyle,
-                    );
-                  case NThumbnailPreviewDirection.none:
-                    // [none] is the direction of the thumbnail of the link preview
-                    return NonePreviewStyle(
-                      snapshot: snapshot.data![0],
-                      linkPreviewOptions: widget.linkPreviewOptions,
-                      nCardStyle: widget.cardStyle,
-                      nTypographyStyle: widget.typographyStyle,
-                    );
-                }
+                      nCardStyle: widget.cardStyle),
+                );
             }
           })),
     );

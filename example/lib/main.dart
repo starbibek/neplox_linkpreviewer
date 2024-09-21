@@ -70,11 +70,13 @@ class _LinkPreviwerState extends State<LinkPreviwer> {
       /// NeploxLinkPreviewer is the main widget that will show the preview of the link
       child: NeploxLinkPreviewer(
         url: widget.url,
+        
         linkPreviewOptions: NLinkPreviewOptions(
             urlLaunch: NURLLaunch.enable,
             urlLaunchIn: NURLLaunchIn.browser,
-            thumbnailPreviewDirection: NThumbnailPreviewDirection.top),
-            
+            thumbnailPreviewDirection: NThumbnailPreviewDirection.rtl,
+          
+            ),
       ),
     );
   }

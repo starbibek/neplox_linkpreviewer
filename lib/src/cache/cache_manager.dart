@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:neplox_linkpreviewer/src/model/element_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -38,7 +39,7 @@ class NCacheManager {
         return ElementModel.empty();
       }
     } catch (ex) {
-      print("Error while getting cache: $ex");
+      debugPrint("Error while getting cache: $ex");
       return ElementModel.empty();
     }
   }

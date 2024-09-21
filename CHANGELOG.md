@@ -27,3 +27,12 @@
 
 * Neplox LinkPreviewer:
 * Migrate to the latest version of flutter 3.19.6
+
+## 1.0.7
+
+* Neplox LinkPreviewer:
+* Migrate to the latest version of flutter 3.24.3
+* Depricated style properties
+* Added new style properties
+* Solved Cache Issues
+

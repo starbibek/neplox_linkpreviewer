@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:neplox_linkpreviewer/src/helper/style/styles.dart';
 
 /// NURLLaunch enum to define link is clickable or not
 /// <summary>
@@ -17,13 +18,21 @@ enum NURLLaunchIn { browser, app, none }
 
 /// NThumbnailPreviewDirection enum for links preview direction.
 /// <summary>
-/// [none] - No thumbnail preview.
+/// [normal] - No thumbnail preview.
 /// [top] - Thumbnail preview in the top middle.
 /// [bottom] - Thumbnail preview in the bottom middle.
 /// [ltr] - Thumbnail preview in the left middle.
 /// [rtl] - Thumbnail preview in the right middle.
 /// </summary>
-enum NThumbnailPreviewDirection { rtl, ltr, none, top, bottom }
+enum NThumbnailPreviewDirection {
+  rtl,
+  ltr,
+  @Deprecated("Instead use normal")
+  none,
+  normal,
+  top,
+  bottom
+}
 
 /// NLinkPreviewOptions public class with properties to configure url launch
 /// <summary>
@@ -32,9 +41,9 @@ enum NThumbnailPreviewDirection { rtl, ltr, none, top, bottom }
 /// [thumbnailPreviewDirection] - Options to configure link preview direction
 /// </summary>
 class NLinkPreviewOptions {
-  NURLLaunch urlLaunch;
-  NURLLaunchIn urlLaunchIn;
-  NThumbnailPreviewDirection thumbnailPreviewDirection;
+  final NURLLaunch urlLaunch;
+  final NURLLaunchIn urlLaunchIn;
+  final NThumbnailPreviewDirection thumbnailPreviewDirection;
   NLinkPreviewOptions({
     /// This is the constructor for the [NLinkPreviewOptions] class.
     ///
@@ -47,6 +56,26 @@ class NLinkPreviewOptions {
     /// [thumbnailPreviewDirection] - The direction of the thumbnail preview. Default is [NThumbnailPreviewDirection.ltr].
     this.thumbnailPreviewDirection = NThumbnailPreviewDirection.ltr,
   });
+
+  double getCardHeight(BuildContext context, NCardStyle nCardStyle) {
+    switch (thumbnailPreviewDirection) {
+      case NThumbnailPreviewDirection.top:
+        return nCardStyle.height ?? 0.3 * MediaQuery.of(context).size.height;
+      case NThumbnailPreviewDirection.bottom:
+        return nCardStyle.height ?? 0.3 * MediaQuery.of(context).size.height;
+      case NThumbnailPreviewDirection.ltr:
+        return nCardStyle.height ?? 0.3 * MediaQuery.of(context).size.width;
+      case NThumbnailPreviewDirection.rtl:
+        return nCardStyle.height ?? 0.3 * MediaQuery.of(context).size.width;
+      case NThumbnailPreviewDirection.normal:
+        return nCardStyle.height ?? 0.28 * MediaQuery.of(context).size.width;
+      // ignore: deprecated_member_use_from_same_package
+      case NThumbnailPreviewDirection.none:
+        return nCardStyle.height ?? 0.28 * MediaQuery.of(context).size.width;
+      default:
+        return nCardStyle.height ?? 0.28 * MediaQuery.of(context).size.width;
+    }
+  }
 }
 // END NLinkPreviewOptions.
 
