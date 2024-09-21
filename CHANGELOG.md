@@ -36,3 +36,8 @@
 * Added new style properties
 * Solved Cache Issues
 
+## 1.0.8
+
+* Neplox LinkPreviewer:
+* Dependencies removed
+

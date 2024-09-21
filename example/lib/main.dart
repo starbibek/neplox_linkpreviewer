@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:neplox_linkpreviewer/neplox_linkpreviewer.dart';
 
@@ -62,21 +64,31 @@ class LinkPreviwer extends StatefulWidget {
 }
 
 class _LinkPreviwerState extends State<LinkPreviwer> {
+  final random = Random();
+  List<NThumbnailPreviewDirection> directions = [
+    NThumbnailPreviewDirection.ltr,
+    NThumbnailPreviewDirection.bottom,
+    NThumbnailPreviewDirection.rtl,
+    NThumbnailPreviewDirection.top,
+    NThumbnailPreviewDirection.normal
+  ];
+
+  // Generate a random index within the list's bounds
   @override
   Widget build(BuildContext context) {
+    int randomIndex = random.nextInt(directions.length);
+
     return Padding(
       padding: const EdgeInsets.all(10.0),
 
       /// NeploxLinkPreviewer is the main widget that will show the preview of the link
       child: NeploxLinkPreviewer(
         url: widget.url,
-        
         linkPreviewOptions: NLinkPreviewOptions(
-            urlLaunch: NURLLaunch.enable,
-            urlLaunchIn: NURLLaunchIn.browser,
-            thumbnailPreviewDirection: NThumbnailPreviewDirection.rtl,
-          
-            ),
+          urlLaunch: NURLLaunch.enable,
+          urlLaunchIn: NURLLaunchIn.browser,
+          thumbnailPreviewDirection: directions[randomIndex],
+        ),
       ),
     );
   }

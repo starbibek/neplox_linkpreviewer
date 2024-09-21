@@ -25,7 +25,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  neplox_linkpreviewer: ^1.0.6
+  neplox_linkpreviewer: ^1.0.8
 
 ``````
 ## Usage
