@@ -79,18 +79,6 @@ class NLinkPreviewOptions {
 }
 // END NLinkPreviewOptions.
 
-// BEGIN SizeProvider.
-extension SizeProvider on double {
-  sres(BuildContext context) {
-    return (MediaQuery.of(context).size.width * this) +
-        (MediaQuery.of(context).size.height * this);
-  }
-
-  sh(BuildContext context) => MediaQuery.of(context).size.height * this;
-  sw(BuildContext context) => MediaQuery.of(context).size.width * this;
-}
-// END SizeProvider.
-
 // BEGIN StringExtension.
 extension StringExtension on String {
   String capitalize() {

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:neplox_linkpreviewer/neplox_linkpreviewer.dart';
 import 'package:neplox_linkpreviewer/src/cache/cache_manager.dart';
 import 'package:neplox_linkpreviewer/src/fetch_elements/fetch_link_index.dart';
-import 'package:neplox_linkpreviewer/src/helper/helpers.dart';
 import 'package:neplox_linkpreviewer/src/helper/ncard_view.dart';
-import 'package:neplox_linkpreviewer/src/model/element_model.dart';
 
 import '../helper/style/styles.dart';
 
@@ -110,12 +109,12 @@ class _NeploxLinkPreviewerState extends State<NeploxLinkPreviewer> {
   @override
   void initState() {
     // initializing the cache manager
-    cacheManager.init();
+    kCacheManager.init();
     super.initState();
   }
 
   @protected
-  Future<ElementModel> getData() async {
+  Future<LinkMetadata> getData() async {
     return await nfetch.fetch(widget.url);
   }
 
@@ -130,7 +129,7 @@ class _NeploxLinkPreviewerState extends State<NeploxLinkPreviewer> {
         widget.linkPreviewOptions.getCardHeight(context, widget.cardStyle);
 
     return Material(
-      child: FutureBuilder<List<ElementModel>>(
+      child: FutureBuilder<List<LinkMetadata>>(
           future: lotsOfData,
           builder: ((context, snapshot) {
             // Checking asynchronously loaded elements
@@ -139,14 +138,19 @@ class _NeploxLinkPreviewerState extends State<NeploxLinkPreviewer> {
                 // returning CircularProgress Indicator if none
                 return SizedBox(
                   width: width,
-                  child: const Center(child: CircularProgressIndicator()),
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
                 );
               case ConnectionState.waiting:
                 // returning CircularProgress Indicator if waiting
                 return SizedBox(
-                    width: width,
-                    height: height,
-                    child: const Center(child: CircularProgressIndicator()));
+                  width: width,
+                  height: height,
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
               case ConnectionState.active:
                 // returning text ...... if active
                 return SizedBox(

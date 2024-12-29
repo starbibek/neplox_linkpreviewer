@@ -1,8 +1,6 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:neplox_linkpreviewer/src/helper/responsive/responsive_card_view.dart';
 import 'package:neplox_linkpreviewer/src/index.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'style/styles.dart';
 
@@ -18,7 +16,7 @@ class NCardView extends StatelessWidget {
     required this.nCardStyle,
   });
 
-  final ElementModel snapshot;
+  final LinkMetadata snapshot;
   final NLinkPreviewOptions linkPreviewOptions;
   final NTypographyStyle nTypographyStyle;
   final NCardStyle nCardStyle;
@@ -73,91 +71,61 @@ class NCardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      /// Checking constraints max width is infinite or not.
-      var cardWidth = constraints.maxWidth != double.infinity
-          ? constraints.maxWidth
-          : MediaQuery.of(context).size.width * 0.95;
+    switch (linkPreviewOptions.thumbnailPreviewDirection) {
+      case NThumbnailPreviewDirection.ltr:
+        return HorizontalCardView(
+          cardStyle: nCardStyle,
+          typography: nTypographyStyle,
+          thumbnail: _imageView(context),
+          content: _contentView(context),
+          isRTL: false,
+        );
 
-      double imgHeight = 0.0, imgWidth = 0.0;
+      case NThumbnailPreviewDirection.rtl:
+        return HorizontalCardView(
+          cardStyle: nCardStyle,
+          typography: nTypographyStyle,
+          thumbnail: _imageView(context),
+          content: _contentView(context),
+          isRTL: true,
+        );
 
-      // Pre-calculate image size based on the thumbnail preview direction
-      if ([NThumbnailPreviewDirection.bottom, NThumbnailPreviewDirection.top]
-          .contains(linkPreviewOptions.thumbnailPreviewDirection)) {
-        imgHeight = 0.5 * cardWidth;
-      } else if ([
-        NThumbnailPreviewDirection.ltr,
-        NThumbnailPreviewDirection.rtl
-      ].contains(linkPreviewOptions.thumbnailPreviewDirection)) {
-        imgWidth = 0.3 * cardWidth;
-      }
+      case NThumbnailPreviewDirection.top:
+        return VerticalCardView(
+          cardStyle: nCardStyle,
+          typography: nTypographyStyle,
+          thumbnail: _imageView(context),
+          content: _contentView(context),
+          thumbnailOnTop: true,
+        );
 
-      /// Checking whether the max height is infinite.
-      double cardHeight = constraints.maxHeight != double.infinity
-          ? constraints.maxHeight
-          : calculateTotalHeight(
-              "${snapshot.title}", // Directly pass the title
-              "${snapshot.description}", // Directly pass the description
-              nTypographyStyle.titleFontSize,
-              nTypographyStyle.bodyFontSize,
-              cardWidth,
-              imgHeight,
-              imgWidth,
-              nTypographyStyle.titleMaxLine,
-              nTypographyStyle.bodyMaxLine,
-            );
+      case NThumbnailPreviewDirection.bottom:
+        return VerticalCardView(
+          cardStyle: nCardStyle,
+          typography: nTypographyStyle,
+          thumbnail: _imageView(context),
+          content: _contentView(context),
+          thumbnailOnTop: false,
+        );
 
-      return Material(
-        clipBehavior: Clip.antiAlias,
-        color: nCardStyle.bgColor,
-        shadowColor: nCardStyle.shadowColor,
-        elevation: nCardStyle.elevation,
-        borderRadius: nCardStyle.borderRadius,
-        child: InkWell(
-          onTap: linkPreviewOptions.urlLaunch == NURLLaunch.enable
-              ? () {
-                  try {
-                    launchUrl(Uri.parse("${snapshot.link}"),
-                        mode: linkPreviewOptions.urlLaunchIn == NURLLaunchIn.app
-                            ? LaunchMode.inAppWebView
-                            : LaunchMode.externalApplication);
-                  } catch (E) {
-                    log(E.toString(), name: "NeploxLinkPreviewer");
-                  }
-                }
-              : null,
-          child: _views(context, linkPreviewOptions.thumbnailPreviewDirection,
-              cardWidth, cardHeight),
-        ),
-      );
-    });
+      default:
+        return _normalView(context);
+    }
   }
 
-  _views(BuildContext context, NThumbnailPreviewDirection uiDirection,
-      double maxWidth, double maxHeight) {
-    switch (uiDirection) {
-      // ignore: deprecated_member_use_from_same_package
-      case NThumbnailPreviewDirection.none:
-        return _normalView(
-          context,
-        );
-      case NThumbnailPreviewDirection.normal:
-        return _normalView(
-          context,
-        );
-      case NThumbnailPreviewDirection.top:
-        return _topView(context, maxWidth, maxHeight);
-      case NThumbnailPreviewDirection.bottom:
-        return _bottomView(context, maxWidth, maxHeight);
-      case NThumbnailPreviewDirection.ltr:
-        return _ltrView(context, maxWidth, maxHeight);
-      case NThumbnailPreviewDirection.rtl:
-        return _rtlView(context, maxWidth, maxHeight);
-      default:
-        return _normalView(
-          context,
-        );
-    }
+  Widget _contentView(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        spacing: 2,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _headerTextWidget(context),
+          _bodyTextWidget(context),
+        ],
+      ),
+    );
   }
 
   Widget _headerTextWidget(BuildContext context) {
@@ -182,7 +150,7 @@ class NCardView extends StatelessWidget {
       style: nTypographyStyle.bodyTextStyle ??
           TextStyle(
             fontSize: nTypographyStyle.bodyFontSize,
-            // fontWeight: nTypographyStyle.bodyFontWeight,
+            fontWeight: nTypographyStyle.bodyFontWeight,
             color: nTypographyStyle.bodyColor,
           ),
     );
@@ -193,149 +161,12 @@ class NCardView extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        spacing: 2,
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           _headerTextWidget(context),
           _bodyTextWidget(context),
-        ],
-      ),
-    );
-  }
-
-  /// Link View thumbnails on top -> title -> body
-  _topView(BuildContext context, double maxWidth, double maxHeight) {
-    return SizedBox(
-      width: maxWidth,
-      child: Column(
-        children: [
-          Container(
-            constraints: BoxConstraints(
-              maxHeight: 0.55 * maxHeight,
-              minWidth: double.infinity,
-            ),
-            child: _imageView(context),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _headerTextWidget(
-                  context,
-                ),
-                _bodyTextWidget(
-                  context,
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  /// Link View tile-> body -> thumbnail
-  Widget _bottomView(BuildContext context, double maxWidth, double maxHeight) {
-    return SizedBox(
-      width: maxWidth,
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _headerTextWidget(
-                  context,
-                ),
-                _bodyTextWidget(
-                  context,
-                ),
-              ],
-            ),
-          ),
-          Container(
-            constraints: BoxConstraints(
-              maxHeight: 0.55 * maxHeight,
-              minWidth: double.infinity,
-            ),
-            child: _imageView(context),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Link View Left to Right thumnail -> title and desc
-  Widget _ltrView(BuildContext context, double maxWidth, double maxHeight) {
-    return SizedBox(
-      width: maxWidth,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: maxWidth * 0.3,
-            height: maxHeight,
-            child: _imageView(context),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _headerTextWidget(
-                    context,
-                  ),
-                  _bodyTextWidget(
-                    context,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Link View Right to Left title and desc on left and thumbnail in the right
-  Widget _rtlView(BuildContext context, double maxWidth, double maxHeight) {
-    return SizedBox(
-      width: maxWidth,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _headerTextWidget(
-                    context,
-                  ),
-                  _bodyTextWidget(
-                    context,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(
-            width: maxWidth * 0.3,
-            height: maxHeight,
-            child: _imageView(context),
-          ),
         ],
       ),
     );
