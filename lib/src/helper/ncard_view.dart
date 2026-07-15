@@ -1,168 +1,249 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:neplox_linkpreviewer/src/index.dart';
+import 'package:neplox_linkpreviewer/src/helper/helpers.dart';
+import 'package:neplox_linkpreviewer/src/model/element_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'style/styles.dart';
 
-/// NCardView is a widget that displays a card with link preview and options
+/// Internal Material card used by the public link preview widget.
 @protected
 class NCardView extends StatelessWidget {
-  /// NCard View Constructor
   const NCardView({
     super.key,
     required this.snapshot,
     required this.linkPreviewOptions,
     required this.nTypographyStyle,
     required this.nCardStyle,
+    this.wrapContent = false,
   });
 
   final ElementModel snapshot;
   final NLinkPreviewOptions linkPreviewOptions;
   final NTypographyStyle nTypographyStyle;
   final NCardStyle nCardStyle;
-
-  @protected
-  double calculateTextHeight(
-      String text, double fontSize, double containerWidth, int maxLines) {
-    // Assuming an average character width proportional to the font size (this can vary depending on the font)
-    var avgCharWidth = fontSize * 0.6;
-
-    // Estimate how many characters fit in one line based on container width
-    var charsPerLine = containerWidth ~/ avgCharWidth;
-
-    // Total number of lines needed (using the text length)
-    var numLines = (text.length / charsPerLine).ceil();
-
-    // Restrict the number of lines to the provided maxLines value
-    numLines = numLines > maxLines ? maxLines : numLines;
-
-    // Calculate the total height based on the number of lines and line height (assuming line height is 1.2 times font size)
-    var lineHeight = fontSize * 1.2;
-    return numLines * lineHeight;
-  }
-
-  @protected
-  double calculateTotalHeight(
-      String title,
-      String body,
-      double titleFontSize,
-      double bodyFontSize,
-      double containerWidth,
-      double imageHeight,
-      double imageWidth,
-      int titleMaxLines,
-      int bodyMaxLines) {
-    // Calculate height for title and body text only once
-    final titleHeight = calculateTextHeight(
-        title, titleFontSize, containerWidth, titleMaxLines);
-    final bodyHeight =
-        calculateTextHeight(body, bodyFontSize, containerWidth, bodyMaxLines);
-
-    // Calculate total height occupied by title, body, image, and padding
-    // Total height occupied by title, body, image, and padding
-    return titleHeight +
-        bodyHeight +
-        imageHeight +
-        (imageWidth > 0
-            ? (imageWidth - titleHeight - bodyHeight)
-            : imageWidth) +
-        17; // 17 is the padding/margin
-  }
+  final bool wrapContent;
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      /// Checking constraints max width is infinite or not.
-      var cardWidth = constraints.maxWidth != double.infinity
-          ? constraints.maxWidth
-          : MediaQuery.of(context).size.width * 0.95;
-
-      double imgHeight = 0.0, imgWidth = 0.0;
-
-      // Pre-calculate image size based on the thumbnail preview direction
-      if ([NThumbnailPreviewDirection.bottom, NThumbnailPreviewDirection.top]
-          .contains(linkPreviewOptions.thumbnailPreviewDirection)) {
-        imgHeight = 0.5 * cardWidth;
-      } else if ([
-        NThumbnailPreviewDirection.ltr,
-        NThumbnailPreviewDirection.rtl
-      ].contains(linkPreviewOptions.thumbnailPreviewDirection)) {
-        imgWidth = 0.3 * cardWidth;
-      }
-
-      /// Checking whether the max height is infinite.
-      double cardHeight = constraints.maxHeight != double.infinity
-          ? constraints.maxHeight
-          : calculateTotalHeight(
-              "${snapshot.title}", // Directly pass the title
-              "${snapshot.description}", // Directly pass the description
-              nTypographyStyle.titleFontSize,
-              nTypographyStyle.bodyFontSize,
-              cardWidth,
-              imgHeight,
-              imgWidth,
-              nTypographyStyle.titleMaxLine,
-              nTypographyStyle.bodyMaxLine,
+    return Material(
+      clipBehavior: Clip.antiAlias,
+      color: nCardStyle.bgColor,
+      shadowColor: nCardStyle.shadowColor,
+      elevation: nCardStyle.elevation,
+      borderRadius: nCardStyle.borderRadius,
+      child: InkWell(
+        onTap: _canLaunch ? _launch : null,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final direction = _responsiveDirection(
+              linkPreviewOptions.thumbnailPreviewDirection,
+              constraints,
             );
-
-      return Material(
-        clipBehavior: Clip.antiAlias,
-        color: nCardStyle.bgColor,
-        shadowColor: nCardStyle.shadowColor,
-        elevation: nCardStyle.elevation,
-        borderRadius: nCardStyle.borderRadius,
-        child: InkWell(
-          onTap: linkPreviewOptions.urlLaunch == NURLLaunch.enable
-              ? () {
-                  try {
-                    launchUrl(Uri.parse("${snapshot.link}"),
-                        mode: linkPreviewOptions.urlLaunchIn == NURLLaunchIn.app
-                            ? LaunchMode.inAppWebView
-                            : LaunchMode.externalApplication);
-                  } catch (E) {
-                    log(E.toString(), name: "NeploxLinkPreviewer");
-                  }
-                }
-              : null,
-          child: _views(context, linkPreviewOptions.thumbnailPreviewDirection,
-              cardWidth, cardHeight),
+            if (wrapContent) {
+              return _wrappedView(direction, constraints.maxWidth);
+            }
+            return _view(direction, constraints);
+          },
         ),
-      );
-    });
+      ),
+    );
   }
 
-  _views(BuildContext context, NThumbnailPreviewDirection uiDirection,
-      double maxWidth, double maxHeight) {
-    switch (uiDirection) {
-      // ignore: deprecated_member_use_from_same_package
-      case NThumbnailPreviewDirection.none:
-        return _normalView(
-          context,
-        );
-      case NThumbnailPreviewDirection.normal:
-        return _normalView(
-          context,
-        );
-      case NThumbnailPreviewDirection.top:
-        return _topView(context, maxWidth, maxHeight);
-      case NThumbnailPreviewDirection.bottom:
-        return _bottomView(context, maxWidth, maxHeight);
-      case NThumbnailPreviewDirection.ltr:
-        return _ltrView(context, maxWidth, maxHeight);
-      case NThumbnailPreviewDirection.rtl:
-        return _rtlView(context, maxWidth, maxHeight);
-      default:
-        return _normalView(
-          context,
-        );
+  bool get _canLaunch =>
+      linkPreviewOptions.urlLaunch == NURLLaunch.enable &&
+      linkPreviewOptions.urlLaunchIn != NURLLaunchIn.none &&
+      snapshot.link != null;
+
+  Future<void> _launch() async {
+    final uri = Uri.tryParse(snapshot.link ?? '');
+    if (uri == null || (uri.scheme != 'http' && uri.scheme != 'https')) return;
+
+    try {
+      final launched = await launchUrl(
+        uri,
+        mode: linkPreviewOptions.urlLaunchIn == NURLLaunchIn.app
+            ? LaunchMode.inAppWebView
+            : LaunchMode.externalApplication,
+      );
+      if (!launched) {
+        log('No application could open $uri', name: 'NeploxLinkPreviewer');
+      }
+    } on Object catch (error, stackTrace) {
+      log(
+        'Could not open $uri',
+        name: 'NeploxLinkPreviewer',
+        error: error,
+        stackTrace: stackTrace,
+      );
     }
   }
 
-  Widget _headerTextWidget(BuildContext context) {
+  NThumbnailPreviewDirection _responsiveDirection(
+    NThumbnailPreviewDirection direction,
+    BoxConstraints constraints,
+  ) {
+    final horizontal = direction == NThumbnailPreviewDirection.ltr ||
+        direction == NThumbnailPreviewDirection.rtl;
+    final vertical = direction == NThumbnailPreviewDirection.top ||
+        direction == NThumbnailPreviewDirection.bottom;
+
+    if (horizontal && constraints.maxWidth < 240) {
+      return constraints.maxHeight >= 120
+          ? NThumbnailPreviewDirection.top
+          : NThumbnailPreviewDirection.normal;
+    }
+    if (vertical && constraints.maxHeight < 120) {
+      return constraints.maxWidth >= 240
+          ? NThumbnailPreviewDirection.ltr
+          : NThumbnailPreviewDirection.normal;
+    }
+    return direction;
+  }
+
+  Widget _view(
+    NThumbnailPreviewDirection direction,
+    BoxConstraints constraints,
+  ) {
+    switch (direction) {
+      // ignore: deprecated_member_use_from_same_package
+      case NThumbnailPreviewDirection.none:
+      case NThumbnailPreviewDirection.normal:
+        return _textContent();
+      case NThumbnailPreviewDirection.top:
+        return Column(children: [
+          _verticalImage(constraints.maxHeight),
+          Expanded(child: _textContent()),
+        ]);
+      case NThumbnailPreviewDirection.bottom:
+        return Column(children: [
+          Expanded(child: _textContent()),
+          _verticalImage(constraints.maxHeight),
+        ]);
+      case NThumbnailPreviewDirection.ltr:
+        return Row(children: [
+          _horizontalImage(constraints.maxWidth),
+          Expanded(child: _textContent()),
+        ]);
+      case NThumbnailPreviewDirection.rtl:
+        return Row(children: [
+          Expanded(child: _textContent()),
+          _horizontalImage(constraints.maxWidth),
+        ]);
+    }
+  }
+
+  Widget _wrappedView(
+    NThumbnailPreviewDirection direction,
+    double availableWidth,
+  ) {
+    switch (direction) {
+      // ignore: deprecated_member_use_from_same_package
+      case NThumbnailPreviewDirection.none:
+      case NThumbnailPreviewDirection.normal:
+        return _wrappedTextContent();
+      case NThumbnailPreviewDirection.top:
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AspectRatio(
+              aspectRatio: nCardStyle.thumbnailAspectRatio,
+              child: _image(),
+            ),
+            _wrappedTextContent(),
+          ],
+        );
+      case NThumbnailPreviewDirection.bottom:
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _wrappedTextContent(),
+            AspectRatio(
+              aspectRatio: nCardStyle.thumbnailAspectRatio,
+              child: _image(),
+            ),
+          ],
+        );
+      case NThumbnailPreviewDirection.ltr:
+        return _wrappedSideView(availableWidth, imageFirst: true);
+      case NThumbnailPreviewDirection.rtl:
+        return _wrappedSideView(availableWidth, imageFirst: false);
+    }
+  }
+
+  Widget _wrappedSideView(double availableWidth, {required bool imageFirst}) {
+    final image = SizedBox(
+      width: availableWidth * nCardStyle.horizontalThumbnailFraction,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 96),
+        child: _image(),
+      ),
+    );
+    final text = Expanded(child: _wrappedTextContent());
+
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: imageFirst ? [image, text] : [text, image],
+      ),
+    );
+  }
+
+  Widget _horizontalImage(double availableWidth) {
+    return SizedBox(
+      width: availableWidth * nCardStyle.horizontalThumbnailFraction,
+      height: double.infinity,
+      child: _image(),
+    );
+  }
+
+  Widget _verticalImage(double availableHeight) {
+    return SizedBox(
+      width: double.infinity,
+      height: availableHeight * nCardStyle.verticalThumbnailFraction,
+      child: _image(),
+    );
+  }
+
+  Widget _textContent() {
+    return Padding(
+      padding: nCardStyle.contentPadding,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (_hasText(snapshot.title)) Flexible(child: _title()),
+          if (_hasText(snapshot.title) && _hasText(snapshot.description))
+            SizedBox(height: nCardStyle.textSpacing),
+          if (_hasText(snapshot.description))
+            Expanded(
+                child:
+                    Align(alignment: Alignment.topLeft, child: _description())),
+        ],
+      ),
+    );
+  }
+
+  Widget _wrappedTextContent() {
+    return Padding(
+      padding: nCardStyle.contentPadding,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (_hasText(snapshot.title)) _title(),
+          if (_hasText(snapshot.title) && _hasText(snapshot.description))
+            SizedBox(height: nCardStyle.textSpacing),
+          if (_hasText(snapshot.description)) _description(),
+        ],
+      ),
+    );
+  }
+
+  Widget _title() {
     return Text(
-      "${snapshot.title}",
+      snapshot.title!,
       maxLines: nTypographyStyle.titleMaxLine,
       overflow: TextOverflow.ellipsis,
       style: nTypographyStyle.titleTextStyle ??
@@ -174,204 +255,56 @@ class NCardView extends StatelessWidget {
     );
   }
 
-  Widget _bodyTextWidget(BuildContext context) {
+  Widget _description() {
     return Text(
-      "${snapshot.description}",
+      snapshot.description!,
       maxLines: nTypographyStyle.bodyMaxLine,
       overflow: TextOverflow.ellipsis,
       style: nTypographyStyle.bodyTextStyle ??
           TextStyle(
             fontSize: nTypographyStyle.bodyFontSize,
-            // fontWeight: nTypographyStyle.bodyFontWeight,
+            fontWeight: nTypographyStyle.bodyFontWeight,
             color: nTypographyStyle.bodyColor,
           ),
     );
   }
 
-  /// Link View without thumbnails.
-  Widget _normalView(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _headerTextWidget(context),
-          _bodyTextWidget(context),
-        ],
-      ),
-    );
-  }
+  Widget _image() {
+    final imageUri = Uri.tryParse(snapshot.image ?? '');
+    if (imageUri == null ||
+        (imageUri.scheme != 'http' && imageUri.scheme != 'https')) {
+      return const _ImageFallback();
+    }
 
-  /// Link View thumbnails on top -> title -> body
-  _topView(BuildContext context, double maxWidth, double maxHeight) {
-    return SizedBox(
-      width: maxWidth,
-      child: Column(
-        children: [
-          Container(
-            constraints: BoxConstraints(
-              maxHeight: 0.55 * maxHeight,
-              minWidth: double.infinity,
-            ),
-            child: _imageView(context),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _headerTextWidget(
-                  context,
-                ),
-                _bodyTextWidget(
-                  context,
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  /// Link View tile-> body -> thumbnail
-  Widget _bottomView(BuildContext context, double maxWidth, double maxHeight) {
-    return SizedBox(
-      width: maxWidth,
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _headerTextWidget(
-                  context,
-                ),
-                _bodyTextWidget(
-                  context,
-                ),
-              ],
-            ),
-          ),
-          Container(
-            constraints: BoxConstraints(
-              maxHeight: 0.55 * maxHeight,
-              minWidth: double.infinity,
-            ),
-            child: _imageView(context),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Link View Left to Right thumnail -> title and desc
-  Widget _ltrView(BuildContext context, double maxWidth, double maxHeight) {
-    return SizedBox(
-      width: maxWidth,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: maxWidth * 0.3,
-            height: maxHeight,
-            child: _imageView(context),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _headerTextWidget(
-                    context,
-                  ),
-                  _bodyTextWidget(
-                    context,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Link View Right to Left title and desc on left and thumbnail in the right
-  Widget _rtlView(BuildContext context, double maxWidth, double maxHeight) {
-    return SizedBox(
-      width: maxWidth,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _headerTextWidget(
-                    context,
-                  ),
-                  _bodyTextWidget(
-                    context,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(
-            width: maxWidth * 0.3,
-            height: maxHeight,
-            child: _imageView(context),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Image Holder for network images from metadata.
-  Widget _imageView(BuildContext context) {
     return Image.network(
-      "${snapshot.image}",
+      imageUri.toString(),
       fit: BoxFit.cover,
-      errorBuilder: (context, error, stackTrace) {
-        return const Center(
-          child: Text("Cannot Retrieved Image From Url"),
+      errorBuilder: (_, __, ___) => const _ImageFallback(),
+      loadingBuilder: (context, child, progress) {
+        if (progress == null) return child;
+        final total = progress.expectedTotalBytes;
+        return Center(
+          child: CircularProgressIndicator.adaptive(
+            value: total == null || total <= 0
+                ? null
+                : progress.cumulativeBytesLoaded / total,
+          ),
         );
       },
-      loadingBuilder: (context, child, loadingProgress) {
-        if ((loadingProgress?.expectedTotalBytes ?? 0) >=
-            (loadingProgress?.expectedTotalBytes?.toInt() ?? 0)) {
-          return child;
-        } else {
-          return SizedBox(
-            width: nCardStyle.width,
-            height: nCardStyle.height,
-            child: Center(
-              child: CircularProgressIndicator.adaptive(
-                // Handle potential division by zero
-                value: loadingProgress?.expectedTotalBytes != null &&
-                        loadingProgress!.expectedTotalBytes! > 0
-                    ? (loadingProgress.cumulativeBytesLoaded) /
-                        loadingProgress.expectedTotalBytes!
-                    : null,
-              ),
-            ),
-          );
-        }
-      },
+    );
+  }
+
+  bool _hasText(String? value) => value != null && value.trim().isNotEmpty;
+}
+
+class _ImageFallback extends StatelessWidget {
+  const _ImageFallback();
+
+  @override
+  Widget build(BuildContext context) {
+    return ColoredBox(
+      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+      child: const Center(child: Icon(Icons.link)),
     );
   }
 }

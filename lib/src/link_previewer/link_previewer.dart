@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:neplox_linkpreviewer/src/cache/cache_manager.dart';
 import 'package:neplox_linkpreviewer/src/fetch_elements/fetch_link_index.dart';
 import 'package:neplox_linkpreviewer/src/helper/helpers.dart';
 import 'package:neplox_linkpreviewer/src/helper/ncard_view.dart';
@@ -7,36 +6,29 @@ import 'package:neplox_linkpreviewer/src/model/element_model.dart';
 
 import '../helper/style/styles.dart';
 
-/// Neplox link preview Widget
-
+/// Fetches [url] and displays its title, description, and optional thumbnail.
+///
+/// Metadata is cached for 24 hours. When [url] changes on an existing widget,
+/// the state automatically requests and displays the new preview.
 class NeploxLinkPreviewer extends StatefulWidget {
   NeploxLinkPreviewer({
     super.key,
     required this.url,
     NLinkPreviewOptions? linkPreviewOptions,
-    @Deprecated('Use TypographyStyle instead to set title FontSize.')
-    this.titleFontSize,
-    @Deprecated('Use TypographyStyle instead to set title Color.')
-    this.titleColor,
-    @Deprecated('Use TypographyStyle instead to set title MaxLine.')
-    this.titleMaxLine,
-    @Deprecated('Use TypographyStyle instead to set title FontWeight.')
-    this.titleFontWeight,
-    @Deprecated('Use TypographyStyle instead to set title TextStyle.')
-    this.titleTextStyle,
-    @Deprecated('Use TypographyStyle instead to set subtitle Color.')
-    this.subtitleColor,
-    @Deprecated('Use TypographyStyle instead to set subtitle FontWeight.')
-    this.subtitleFontWeight,
-    @Deprecated('Use TypographyStyle instead to set subtitle MaxLine.')
-    this.subtitleMaxLine,
-    @Deprecated('Use TypographyStyle instead to set subtitle FontSize.')
-    this.subtitleFontSize,
-    @Deprecated('Use TypographyStyle instead to set subtitle TextStyle.')
-    this.subtitleTextStyle,
-    @Deprecated('Use CardStyle instead to style card.') this.bgColor,
+    @Deprecated('Use typographyStyle instead.') this.titleFontSize,
+    @Deprecated('Use typographyStyle instead.') this.titleColor,
+    @Deprecated('Use typographyStyle instead.') this.titleMaxLine,
+    @Deprecated('Use typographyStyle instead.') this.titleFontWeight,
+    @Deprecated('Use typographyStyle instead.') this.titleTextStyle,
+    @Deprecated('Use typographyStyle instead.') this.subtitleColor,
+    @Deprecated('Use typographyStyle instead.') this.subtitleFontWeight,
+    @Deprecated('Use typographyStyle instead.') this.subtitleMaxLine,
+    @Deprecated('Use typographyStyle instead.') this.subtitleFontSize,
+    @Deprecated('Use typographyStyle instead.') this.subtitleTextStyle,
+    @Deprecated('Use cardStyle instead.') this.bgColor,
     NTypographyStyle? typographyStyle,
     NCardStyle? cardStyle,
+    @visibleForTesting this.metadataLoader,
   })  : linkPreviewOptions = linkPreviewOptions ?? NLinkPreviewOptions(),
         typographyStyle = typographyStyle ??
             NTypographyStyle(
@@ -51,46 +43,46 @@ class NeploxLinkPreviewer extends StatefulWidget {
               bodyMaxLine: subtitleMaxLine,
               bodyTextStyle: subtitleTextStyle,
             ),
-        cardStyle = cardStyle ??
-            NCardStyle(
-              bgColor: bgColor ?? Colors.white,
-            );
+        cardStyle = cardStyle ?? NCardStyle(bgColor: bgColor);
 
-  // NeploxLinkPreviewer properties
-  /// [url] - url of the website from where metadata is retrieved
+  /// URL of the page to preview. HTTP and HTTPS URLs are supported. If the
+  /// scheme is omitted, HTTPS is assumed.
   final String url;
 
-  /// [linkPreviewOptions] - contain properties to handle url launch, ui direction etc.
+  /// Controls thumbnail placement and tap behavior.
   final NLinkPreviewOptions linkPreviewOptions;
 
-  /// [typographyStyle] - contain properties to style title, and body text
+  /// Controls title and description typography.
   final NTypographyStyle typographyStyle;
 
-  /// [cardStyle] - contain properties to style card
+  /// Controls dimensions and Material card decoration.
   final NCardStyle cardStyle;
 
-// NeploxLinkPreviewer deprecated properties
-  @Deprecated('Use TypographyStyle instead.')
+  /// Overrides metadata loading in widget tests.
+  @visibleForTesting
+  final Future<ElementModel> Function(String url)? metadataLoader;
+
+  @Deprecated('Use typographyStyle instead.')
   final double? titleFontSize;
-  @Deprecated('Use TypographyStyle instead.')
+  @Deprecated('Use typographyStyle instead.')
   final FontWeight? titleFontWeight;
-  @Deprecated('Use TypographyStyle instead.')
+  @Deprecated('Use typographyStyle instead.')
   final Color? titleColor;
-  @Deprecated('Use TypographyStyle instead.')
+  @Deprecated('Use typographyStyle instead.')
   final int? titleMaxLine;
-  @Deprecated('Use TypographyStyle instead.')
+  @Deprecated('Use typographyStyle instead.')
   final TextStyle? titleTextStyle;
-  @Deprecated('Use TypographyStyle instead.')
+  @Deprecated('Use typographyStyle instead.')
   final double? subtitleFontSize;
-  @Deprecated('Use TypographyStyle instead.')
+  @Deprecated('Use typographyStyle instead.')
   final FontWeight? subtitleFontWeight;
-  @Deprecated('Use TypographyStyle instead.')
+  @Deprecated('Use typographyStyle instead.')
   final Color? subtitleColor;
-  @Deprecated('Use TypographyStyle instead.')
+  @Deprecated('Use typographyStyle instead.')
   final int? subtitleMaxLine;
-  @Deprecated('Use TypographyStyle instead.')
+  @Deprecated('Use typographyStyle instead.')
   final TextStyle? subtitleTextStyle;
-  @Deprecated('Use CardStyle instead.')
+  @Deprecated('Use cardStyle instead.')
   final Color? bgColor;
 
   @override
@@ -98,79 +90,82 @@ class NeploxLinkPreviewer extends StatefulWidget {
 }
 
 class _NeploxLinkPreviewerState extends State<NeploxLinkPreviewer> {
-  /// [nFetch] is the instance of the meta data fetch request
-  final NMetaFetcher nfetch = NMetaFetcher.instance;
+  final NMetaFetcher _fetcher = NMetaFetcher.instance;
+  late Future<ElementModel> _metadata;
 
-  /// [lotsOfData] is the contain data from url meta data
-  late final lotsOfData = Future.wait(
-    [
-      getData(),
-    ],
-  );
   @override
   void initState() {
-    // initializing the cache manager
-    cacheManager.init();
     super.initState();
+    _metadata = _loadMetadata();
   }
 
-  @protected
-  Future<ElementModel> getData() async {
-    return await nfetch.fetch(widget.url);
+  @override
+  void didUpdateWidget(covariant NeploxLinkPreviewer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.url != widget.url) {
+      _metadata = _loadMetadata();
+    }
   }
+
+  void _retry() {
+    setState(() {
+      _metadata = _loadMetadata();
+    });
+  }
+
+  Future<ElementModel> _loadMetadata() =>
+      widget.metadataLoader?.call(widget.url) ?? _fetcher.fetch(widget.url);
 
   @override
   Widget build(BuildContext context) {
-    double width = widget.cardStyle.width ??
-        0.95 *
-            MediaQuery.of(context)
-                .size
-                .width; // Default to 95% of available width
-    double height =
-        widget.linkPreviewOptions.getCardHeight(context, widget.cardStyle);
+    final width =
+        widget.cardStyle.width ?? MediaQuery.sizeOf(context).width * 0.95;
+    final fixedHeight = widget.cardStyle.heightMode == NCardHeightMode.fixed
+        ? widget.linkPreviewOptions.getCardHeight(context, widget.cardStyle)
+        : null;
 
-    return Material(
-      child: FutureBuilder<List<ElementModel>>(
-          future: lotsOfData,
-          builder: ((context, snapshot) {
-            // Checking asynchronously loaded elements
-            switch (snapshot.connectionState) {
-              case ConnectionState.none:
-                // returning CircularProgress Indicator if none
-                return SizedBox(
-                  width: width,
-                  child: const Center(child: CircularProgressIndicator()),
-                );
-              case ConnectionState.waiting:
-                // returning CircularProgress Indicator if waiting
-                return SizedBox(
-                    width: width,
-                    height: height,
-                    child: const Center(child: CircularProgressIndicator()));
-              case ConnectionState.active:
-                // returning text ...... if active
-                return SizedBox(
-                    width: width,
-                    height: height,
-                    child: const Center(child: Text("........")));
-              case ConnectionState.done:
-                if (!snapshot.hasData) {
-                  return SizedBox(
-                      width: width,
-                      height: height,
-                      child: const Center(
-                          child: Text("Error while fetching data")));
-                }
-                return SizedBox(
-                  width: 0.95 * MediaQuery.of(context).size.width,
-                  child: NCardView(
-                      snapshot: snapshot.data![0],
-                      linkPreviewOptions: widget.linkPreviewOptions,
-                      nTypographyStyle: widget.typographyStyle,
-                      nCardStyle: widget.cardStyle),
-                );
-            }
-          })),
+    final preview = FutureBuilder<ElementModel>(
+      future: _metadata,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const Center(child: CircularProgressIndicator.adaptive());
+        }
+
+        final metadata = snapshot.data;
+        if (snapshot.hasError || metadata == null || !metadata.hasPreviewData) {
+          return Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Unable to load link preview'),
+                const SizedBox(height: 8),
+                TextButton(onPressed: _retry, child: const Text('Retry')),
+              ],
+            ),
+          );
+        }
+
+        return NCardView(
+          snapshot: metadata,
+          linkPreviewOptions: widget.linkPreviewOptions,
+          nTypographyStyle: widget.typographyStyle,
+          nCardStyle: widget.cardStyle,
+          wrapContent:
+              widget.cardStyle.heightMode == NCardHeightMode.contentWrap,
+        );
+      },
+    );
+
+    return SizedBox(
+      width: width,
+      height: fixedHeight,
+      child: widget.cardStyle.heightMode == NCardHeightMode.contentWrap
+          ? ConstrainedBox(
+              constraints:
+                  BoxConstraints(minHeight: widget.cardStyle.minHeight),
+              child: preview,
+            )
+          : preview,
     );
   }
 }

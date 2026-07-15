@@ -1,34 +1,10 @@
 import 'package:flutter/material.dart';
 
-/// Public TypographyStyle class for link previewer text styling
-/// <summary>
-/// [titleFontSize] is the font size of the title
-/// [titleFontWeight] is the font weight property of the title
-/// [titleColor] is the color of the title
-/// [titleMaxLine] is the maxline of the title
-/// [titleTextStyle]  it TextStyle for the title
-/// [bodyFontSize] is the font size of the body text
-/// [bodyFontWeight] is the font weight property of the body text
-/// [bodyColor] is the color of the body content
-/// [bodyMaxLine] is the maxline of the body text
-/// [bodyTextStyle] is TextStyle for body text
-
+/// Typography configuration for preview titles and descriptions.
+///
+/// When [titleTextStyle] or [bodyTextStyle] is supplied, that complete style is
+/// used instead of the corresponding size, weight, and color properties.
 class NTypographyStyle {
-  // NTypographyStyle title properties
-  final double titleFontSize;
-  final FontWeight titleFontWeight;
-  final Color titleColor;
-  final int titleMaxLine;
-  final TextStyle? titleTextStyle;
-
-  // NTypographyStyle body properties
-  final double bodyFontSize;
-  final FontWeight bodyFontWeight;
-  final Color bodyColor;
-  final int bodyMaxLine;
-  final TextStyle? bodyTextStyle;
-
-// NTypographyStyle Constructor
   NTypographyStyle({
     Color? titleColor,
     double? titleFontSize,
@@ -40,7 +16,9 @@ class NTypographyStyle {
     FontWeight? bodyFontWeight,
     int? bodyMaxLine,
     this.bodyTextStyle,
-  })  : titleMaxLine = titleMaxLine ?? 2,
+  })  : assert((titleMaxLine ?? 2) > 0),
+        assert((bodyMaxLine ?? 4) > 0),
+        titleMaxLine = titleMaxLine ?? 2,
         titleColor = titleColor ?? Colors.grey.shade800,
         titleFontSize = titleFontSize ?? 16,
         titleFontWeight = titleFontWeight ?? FontWeight.w500,
@@ -49,6 +27,37 @@ class NTypographyStyle {
         bodyFontSize = bodyFontSize ?? 10,
         bodyFontWeight = bodyFontWeight ?? FontWeight.normal;
 
+  /// Title font size used when [titleTextStyle] is null.
+  final double titleFontSize;
+
+  /// Title weight used when [titleTextStyle] is null.
+  final FontWeight titleFontWeight;
+
+  /// Title color used when [titleTextStyle] is null.
+  final Color titleColor;
+
+  /// Maximum number of displayed title lines.
+  final int titleMaxLine;
+
+  /// Complete optional title style.
+  final TextStyle? titleTextStyle;
+
+  /// Description font size used when [bodyTextStyle] is null.
+  final double bodyFontSize;
+
+  /// Description weight used when [bodyTextStyle] is null.
+  final FontWeight bodyFontWeight;
+
+  /// Description color used when [bodyTextStyle] is null.
+  final Color bodyColor;
+
+  /// Maximum number of displayed description lines.
+  final int bodyMaxLine;
+
+  /// Complete optional description style.
+  final TextStyle? bodyTextStyle;
+
+  /// Returns a configuration with selected values replaced.
   NTypographyStyle copyWith({
     Color? titleColor,
     double? titleFontSize,
@@ -60,17 +69,18 @@ class NTypographyStyle {
     FontWeight? bodyFontWeight,
     int? bodyMaxLine,
     TextStyle? bodyTextStyle,
-  }) =>
-      NTypographyStyle(
-        bodyColor: bodyColor ?? this.bodyColor,
-        bodyFontSize: bodyFontSize ?? this.bodyFontSize,
-        bodyFontWeight: bodyFontWeight ?? this.bodyFontWeight,
-        bodyMaxLine: bodyMaxLine ?? this.bodyMaxLine,
-        bodyTextStyle: bodyTextStyle ?? this.bodyTextStyle,
-        titleColor: titleColor ?? this.titleColor,
-        titleFontSize: titleFontSize ?? this.titleFontSize,
-        titleFontWeight: titleFontWeight ?? this.titleFontWeight,
-        titleMaxLine: titleMaxLine ?? this.titleMaxLine,
-        titleTextStyle: titleTextStyle ?? this.titleTextStyle,
-      );
+  }) {
+    return NTypographyStyle(
+      bodyColor: bodyColor ?? this.bodyColor,
+      bodyFontSize: bodyFontSize ?? this.bodyFontSize,
+      bodyFontWeight: bodyFontWeight ?? this.bodyFontWeight,
+      bodyMaxLine: bodyMaxLine ?? this.bodyMaxLine,
+      bodyTextStyle: bodyTextStyle ?? this.bodyTextStyle,
+      titleColor: titleColor ?? this.titleColor,
+      titleFontSize: titleFontSize ?? this.titleFontSize,
+      titleFontWeight: titleFontWeight ?? this.titleFontWeight,
+      titleMaxLine: titleMaxLine ?? this.titleMaxLine,
+      titleTextStyle: titleTextStyle ?? this.titleTextStyle,
+    );
+  }
 }

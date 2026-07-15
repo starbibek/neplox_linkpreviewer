@@ -1,25 +1,20 @@
-import 'dart:developer';
-
 import '../model/element_model.dart';
 import 'fetch_link_method.dart';
 
-/// Neplox URL META DATA Fetcher.
+/// Public metadata-fetching API for custom preview interfaces.
+///
+/// Use the shared [instance]. Successful results are cached for 24 hours.
+/// Invalid URLs, request failures, and pages without usable metadata return
+/// [ElementModel.empty].
 class NeploxMetaDataFetcher {
-  // BEGIN SINGLETON
   NeploxMetaDataFetcher._();
+
+  /// Shared metadata fetcher.
   static final NeploxMetaDataFetcher instance = NeploxMetaDataFetcher._();
-  // END SINGLETON
 
-// BEGIN getData/ Fetch Meta Data
-
-  ///Get Data from Element
+  /// Fetches metadata for [url].
   ///
-  ///[url] is the url of the website you want to fetch data from
-  ///
-  ///return ElementModel from the url
-  Future<ElementModel> fetchData(String url) async {
-    log("Url", error: url);
-    return await NMetaFetcher.instance.fetch(url);
-    // END getData/ Fetch Meta Data
-  }
+  /// URLs without a scheme use HTTPS. Only HTTP and HTTPS are accepted.
+  Future<ElementModel> fetchData(String url) =>
+      NMetaFetcher.instance.fetch(url);
 }

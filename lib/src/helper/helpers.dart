@@ -1,100 +1,107 @@
 import 'package:flutter/material.dart';
 import 'package:neplox_linkpreviewer/src/helper/style/styles.dart';
 
-/// NURLLaunch enum to define link is clickable or not
-/// <summary>
-/// [enable] - Enable the URL launch.
-/// [disable] - Disable the URL launch.
-/// </summary>
-enum NURLLaunch { enable, disable }
+/// Whether tapping a preview card launches its URL.
+enum NURLLaunch {
+  /// Make the card interactive.
+  enable,
 
-/// NURLLaunchIn enum to define url lauch methods
-/// <summary>
-/// [browser] - Launch the URL in the browser.
-/// [app] - Launch the URL in the app.
-/// [none] - Don't launch the URL.
-/// </summary>
-enum NURLLaunchIn { browser, app, none }
-
-/// NThumbnailPreviewDirection enum for links preview direction.
-/// <summary>
-/// [normal] - No thumbnail preview.
-/// [top] - Thumbnail preview in the top middle.
-/// [bottom] - Thumbnail preview in the bottom middle.
-/// [ltr] - Thumbnail preview in the left middle.
-/// [rtl] - Thumbnail preview in the right middle.
-/// </summary>
-enum NThumbnailPreviewDirection {
-  rtl,
-  ltr,
-  @Deprecated("Instead use normal")
-  none,
-  normal,
-  top,
-  bottom
+  /// Render the card without a tap action.
+  disable,
 }
 
-/// NLinkPreviewOptions public class with properties to configure url launch
-/// <summary>
-/// [urlLaunch] - Options to configure url launch
-/// [urlLaunchIn] - Options to configure url launch methods
-/// [thumbnailPreviewDirection] - Options to configure link preview direction
-/// </summary>
+/// Where an enabled preview opens its URL.
+enum NURLLaunchIn {
+  /// Open with an external browser or the platform's default application.
+  browser,
+
+  /// Open inside the application using an in-app web view.
+  app,
+
+  /// Do not launch a URL, even when [NURLLaunch.enable] is selected.
+  none,
+}
+
+/// Placement of the preview thumbnail relative to its text.
+enum NThumbnailPreviewDirection {
+  /// Place the thumbnail on the right.
+  rtl,
+
+  /// Place the thumbnail on the left.
+  ltr,
+
+  /// Legacy name for [normal].
+  @Deprecated('Use normal instead.')
+  none,
+
+  /// Show title and description without a thumbnail.
+  normal,
+
+  /// Place the thumbnail above the text.
+  top,
+
+  /// Place the thumbnail below the text.
+  bottom,
+}
+
+/// Interaction and thumbnail-layout options for a link preview.
 class NLinkPreviewOptions {
-  final NURLLaunch urlLaunch;
-  final NURLLaunchIn urlLaunchIn;
-  final NThumbnailPreviewDirection thumbnailPreviewDirection;
   NLinkPreviewOptions({
-    /// This is the constructor for the [NLinkPreviewOptions] class.
-    ///
-    /// [urlLaunch] - Enable or disable the URL launch. Default is [NURLLaunch.enable].
     this.urlLaunch = NURLLaunch.enable,
-
-    /// [urlLaunchIn] - Launch the URL in the browser or app. Default is [NURLLaunchIn.browser].
     this.urlLaunchIn = NURLLaunchIn.browser,
-
-    /// [thumbnailPreviewDirection] - The direction of the thumbnail preview. Default is [NThumbnailPreviewDirection.ltr].
     this.thumbnailPreviewDirection = NThumbnailPreviewDirection.ltr,
   });
 
+  /// Whether the card responds to taps.
+  final NURLLaunch urlLaunch;
+
+  /// Where the URL opens when launching is enabled.
+  final NURLLaunchIn urlLaunchIn;
+
+  /// Requested thumbnail placement.
+  ///
+  /// The rendered layout may adapt on very narrow or short cards.
+  final NThumbnailPreviewDirection thumbnailPreviewDirection;
+
+  /// Calculates the direction-aware height used by fixed-height cards.
+  ///
+  /// Returns [NCardStyle.height] when explicitly configured.
   double getCardHeight(BuildContext context, NCardStyle nCardStyle) {
     switch (thumbnailPreviewDirection) {
       case NThumbnailPreviewDirection.top:
-        return nCardStyle.height ?? 0.3 * MediaQuery.of(context).size.height;
       case NThumbnailPreviewDirection.bottom:
-        return nCardStyle.height ?? 0.3 * MediaQuery.of(context).size.height;
+        return nCardStyle.height ?? 0.3 * MediaQuery.sizeOf(context).height;
       case NThumbnailPreviewDirection.ltr:
-        return nCardStyle.height ?? 0.3 * MediaQuery.of(context).size.width;
       case NThumbnailPreviewDirection.rtl:
-        return nCardStyle.height ?? 0.3 * MediaQuery.of(context).size.width;
+        return nCardStyle.height ?? 0.3 * MediaQuery.sizeOf(context).width;
       case NThumbnailPreviewDirection.normal:
-        return nCardStyle.height ?? 0.28 * MediaQuery.of(context).size.width;
       // ignore: deprecated_member_use_from_same_package
       case NThumbnailPreviewDirection.none:
-        return nCardStyle.height ?? 0.28 * MediaQuery.of(context).size.width;
-      default:
-        return nCardStyle.height ?? 0.28 * MediaQuery.of(context).size.width;
+        return nCardStyle.height ?? 0.28 * MediaQuery.sizeOf(context).width;
     }
   }
 }
-// END NLinkPreviewOptions.
 
-// BEGIN SizeProvider.
+/// Responsive size helpers retained for backward compatibility.
 extension SizeProvider on double {
-  sres(BuildContext context) {
-    return (MediaQuery.of(context).size.width * this) +
-        (MediaQuery.of(context).size.height * this);
+  /// Scales this value by the sum of screen width and height.
+  double sres(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    return (size.width * this) + (size.height * this);
   }
 
-  sh(BuildContext context) => MediaQuery.of(context).size.height * this;
-  sw(BuildContext context) => MediaQuery.of(context).size.width * this;
-}
-// END SizeProvider.
+  /// Returns this fraction of the screen height.
+  double sh(BuildContext context) => MediaQuery.sizeOf(context).height * this;
 
-// BEGIN StringExtension.
+  /// Returns this fraction of the screen width.
+  double sw(BuildContext context) => MediaQuery.sizeOf(context).width * this;
+}
+
+/// General string helpers retained for backward compatibility.
 extension StringExtension on String {
+  /// Uppercases the first UTF-16 code unit, leaving an empty string unchanged.
   String capitalize() {
+    if (isEmpty) return this;
     return "${this[0].toUpperCase()}${substring(1)}";
   }
 }
-// END StringExtension.
